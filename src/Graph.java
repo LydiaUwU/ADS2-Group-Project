@@ -2,6 +2,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.File;
+import java.util.Comparator;
+import java.util.Collections;
 
 /**
  * Custom class to generate and store a graph based on a .txt file as specified in the assignment spec.
@@ -16,13 +19,47 @@ public class Graph {
     /**
      * @param filename: Filename of .txt file to use to generate the graph.
      */
-    Graph(String filename) {
-        if (filename != null) {
+
+    //stops.txt, stop_times.txt, transfers.txt
+    Graph(String[] filenames) {
+        if (filenames != null) {
             edges = new ArrayList<>();
 
             // Read file and use data to build graph
             try {
-                BufferedReader reader = new BufferedReader(new FileReader(filename));
+
+                // getting number of stops by seeing how many lines are in stops.txt - make more efficient
+
+                int numberOfStops = 0;
+                ArrayList<Integer> stopNumbers = new ArrayList<>();
+
+                Scanner stopsScanner = new Scanner(new File(filenames[0]));
+
+                //skip first line of stops.txt as it is just the variable names
+                stopsScanner.nextLine();
+
+                /* getting stops info (adding to ArrayList stopNumbers, which will be then used to create the labels
+                for the nodes */
+                while(stopsScanner.hasNextLine())
+                {
+                    stopNumbers.add(Integer.parseInt(stopsScanner.nextLine().trim().split(",")[0]));
+                    numberOfStops++;
+                }
+
+                nodes = new Node[numberOfStops];
+
+                for (int i = 0; i < numberOfStops; i++) {
+                    nodes[i] = new Node(i);
+                    nodes[i].label = stopNumbers.get(i);
+                }
+
+                Collections.sort(nodes, (node1, node2) -> node1.label - node2.label);
+
+                for (int i = 0; i < nodes.length; i++) {
+                    System.out.println("nodes["+i+"] label = "+nodes[i].label);
+                }
+
+                /*BufferedReader reader = new BufferedReader(new FileReader(filename));
                 String line;
 
                 int lineNo = 0;
@@ -61,10 +98,10 @@ public class Graph {
                     sc.close();
                 }
 
-                reader.close();
+                reader.close();*/
 
             } catch (Exception e) {
-                System.err.format("Exception occurred trying to read '%s'.", filename);
+                //System.err.format("Exception occurred trying to read '%s'.", filename);
                 e.printStackTrace();
             }
         }
