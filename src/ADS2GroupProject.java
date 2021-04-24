@@ -6,49 +6,41 @@ import java.io.FileNotFoundException;
 
 class ADS2GroupProject {
     public static void main(String[] args) {
-        //everything is in a try-catch loop to handle FileNotFoundException
-        try {
-            ArrayList<Transfer> transfers = new ArrayList<Transfer>();
+        // create graph with edges taken from stop_times.txt and transfers.txt
 
-            /*
-            all the file opening code assumes you have the input files in a folder called "inputs" that is in the project
-            directory (not included in the repo as they would be too large to zip)
-            */
-
-            // ---------- getting transfers data ----------
-
-            Scanner transferScanner = new Scanner(new File("inputs/transfers.txt"));
-
-            //skip first line of transfers.txt as this is just the variable names
-            transferScanner.nextLine();
-
-            //reading lines from transfers.txt and putting them in an ArrayList of transfer objects
-            while(transferScanner.hasNextLine()) {
-                String[] currentLine = transferScanner.nextLine().trim().split(",");
-
-                //if no value for minTransferTime is provided, set it to 0 for simplicity
-                int time = 0;
-                if (currentLine.length==4) time = Integer.parseInt(currentLine[3]);
-
-                transfers.add(new Transfer(Integer.parseInt(currentLine[0]),
-                        Integer.parseInt(currentLine[1]),Integer.parseInt(currentLine[2]),time));
-
+        String[] filenames = {"inputs/stops.txt","inputs/stop_times.txt","inputs/transfers.txt"};
+        Graph stopsGraph = new Graph(filenames);
+        
+        //print out all edges in the graph, sorted by node (14975 edges, 8757 nodes total)
+        /*for (int i=0;i<stopsGraph.nodes.length;i++)
+        {
+            for (int j=0;j<stopsGraph.nodes[i].edges.size();j++)
+            {
+                System.out.println(stopsGraph.nodes[i].edges.get(j).toString());
+                edgeCounter++;
             }
+        }*/
 
-            // test graph
+        //1477, 1866 no path
+        //1817, 1819 path (1817,1818,1819)
+        /*646, 1278 should work but doesn't (heading towards the start, it takes another direction and says that
+          one of the edges is null when shouldn't be*/
+        PathDijkstra stopsPath1 = new PathDijkstra(stopsGraph, 841, 842);
+        ArrayList<Edge> shortestPath1 = new ArrayList<Edge>();
 
-            String[] filenames = {"inputs/stops.txt","inputs/stop_times.txt","inputs/transfers.txt"};
-            Graph testGraph = new Graph(filenames);
+        if (stopsPath1.getShortestPath()!=null)
+        {
+            shortestPath1 = stopsPath1.getShortestPath();
 
-            /*//print statements to see if the data has been read correctly
-            for (int i=0;i<transfers.size();i++) {
-                System.out.println("transfers["+i+"] = "+transfers.get(i).fromStopId+","
-                +transfers.get(i).toStopId+","+transfers.get(i).transferType+","
-                +transfers.get(i).minTransferTime);
-            }*/
+            for (int i=0;i<shortestPath1.size();i++)
+            {
+                System.out.println(shortestPath1.get(i).toString());
+            }
         }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+
+        else System.out.println("no path");
+
+        for (int i=0;i<stopsGraph.nodes[646].edges.size();i++)
+            System.out.println(stopsGraph.nodes[646].edges.get(i).toString());
     }
 }

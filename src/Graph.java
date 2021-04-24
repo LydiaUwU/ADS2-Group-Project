@@ -5,6 +5,7 @@ import java.util.Scanner;
 import java.io.File;
 import java.util.Comparator;
 import java.util.Collections;
+import java.util.Arrays;
 
 /**
  * Custom class to generate and store a graph based on a .txt file as specified in the assignment spec.
@@ -15,21 +16,23 @@ import java.util.Collections;
 public class Graph {
     Node[] nodes;
     ArrayList<Edge> edges;
+    //not sure where to put this
+    ArrayList<Transfer> transfers = new ArrayList<Transfer>();
 
     /**
      * @param filename: Filename of .txt file to use to generate the graph.
      */
 
-    //stops.txt, stop_times.txt, transfers.txt
+    /* stops.txt, stop_times.txt, transfers.txt#
+     (is this overkill? can the filenames just be given to the scanners directly?) /*/
     Graph(String[] filenames) {
         if (filenames != null) {
             edges = new ArrayList<>();
 
             // Read file and use data to build graph
             try {
-
-                // getting number of stops by seeing how many lines are in stops.txt - make more efficient
-
+                /* getting number of stops by seeing how many lines are in stops.txt - make more efficient
+                   also adapt this part to create a ternary search tree */
                 int numberOfStops = 0;
                 ArrayList<Integer> stopNumbers = new ArrayList<>();
 
@@ -46,60 +49,187 @@ public class Graph {
                     numberOfStops++;
                 }
 
+                //set size of nodes array to the number of stops
                 nodes = new Node[numberOfStops];
 
+                //set each element of nodes to be a node and then set its label to the correct stop number
                 for (int i = 0; i < numberOfStops; i++) {
                     nodes[i] = new Node(i);
                     nodes[i].label = stopNumbers.get(i);
                 }
 
-                Collections.sort(nodes, (node1, node2) -> node1.label - node2.label);
+                //sort stops by stop number, this will allow transfers to be added to the graph quicker
+                Arrays.sort(nodes, Node::compareTo);
 
-                for (int i = 0; i < nodes.length; i++) {
+                //print out sorted array of nodes
+                /*for (int i = 0; i < nodes.length; i++) {
                     System.out.println("nodes["+i+"] label = "+nodes[i].label);
+                }*/
+
+                /*
+                --------------- TRANSFERS.TXT ---------------
+                 */
+
+                //open transfers.txt
+                Scanner transferScanner = new Scanner(new File(filenames[2]));
+
+                //skip first line of transfers.txt as this is just the variable names
+                transferScanner.nextLine();
+
+                //reading lines from transfers.txt and adding them to transfers ArrayList
+                while(transferScanner.hasNextLine()) {
+                    String[] currentLine = transferScanner.nextLine().trim().split(",");
+
+                    //if no value for minTransferTime is provided, set it to 0 for simplicity
+                    int time = 0;
+                    if (currentLine.length==4) time = Integer.parseInt(currentLine[3]);
+
+                    //add current transfer to transfers
+                    transfers.add(new Transfer(Integer.parseInt(currentLine[0]),
+                            Integer.parseInt(currentLine[1]),Integer.parseInt(currentLine[2]),time));
                 }
 
-                /*BufferedReader reader = new BufferedReader(new FileReader(filename));
-                String line;
+                /*
+                  --------------- STOP_TIMES.TXT ---------------
+                */
 
-                int lineNo = 0;
-                while ((line = reader.readLine()) != null) {
-                    Scanner sc = new Scanner(line);
-                    if (lineNo == 0) { // Read amount of Nodes and initialize them
-                        int numberOfNodes = sc.nextInt();
-                        nodes = new Node[numberOfNodes];
+                //open stop_times.txt
+                Scanner stopTimesScanner = new Scanner(new File(filenames[1]));
 
-                        for (int i = 0; i < numberOfNodes; i++) {
-                            nodes[i] = new Node(i);
-                        }
-                    } else if (lineNo > 1) { // Find and add edges
-                        int[] nodeLabels = new int[2];
-                        double weight = 0;
+                        /*set previous line info to -1, so line 1 will never match with line 0
+                          (which is the variable names)*/
+                int previousTripId = -1;
+                int previousStopId = -1;
 
-                        int i = 0;
-                        while (sc.hasNext()) {
-                            if (i <= 1) {
-                                nodeLabels[i] = sc.nextInt();
-                            } else {
-                                weight = sc.nextDouble();
-                            }
+                //skip first line of stop_times.txt as this is just the variable names
+                stopTimesScanner.nextLine();
 
-                            i++;
-                        }
+                        /*reading lines from stop_times.txt and adding them to transfers ArrayList.
+                          this is done by keeping the previous line's info in memory, and comparing it
+                          to the current line. if both have the same trip id, a transfer is added to transfers.
+                          note that the same transfer may occur many times during the day, so transfers has
+                          a lot of duplicates (time information is not currently stored yet).
+                         */
 
-                        // Add discovered nodes and edge
-                        Edge e = new Edge(nodes[nodeLabels[0]], nodes[nodeLabels[1]], weight);
 
-                        nodes[nodeLabels[0]].addEdge(e);
-                        edges.add(e);
+                while(stopTimesScanner.hasNextLine()) {
+                    String[] currentLine = stopTimesScanner.nextLine().trim().split(",");
+
+                    //read current line info
+                    int currentTripId = Integer.parseInt(currentLine[0]);
+                    int currentStopId = Integer.parseInt(currentLine[3]);
+
+                    if (currentTripId==previousTripId)
+                    {
+                        //add current transfer to transfers
+                        transfers.add(new Transfer(previousStopId, currentStopId,1,0));
                     }
-
-                    lineNo++;
-                    sc.close();
+                    previousTripId = currentTripId;
+                    previousStopId = currentStopId;
                 }
 
-                reader.close();*/
+                //ADDING TRANSFERS TO GRAPH
 
+                /* sort transfers by toStopIds, then by fromStopIds. this makes sure that all duplicates are later
+                   removed (because simply sorting by fromStopIds leaves the toStopIds unsorted)*/
+                Collections.sort(transfers, Transfer::compareTo);
+                Collections.sort(transfers, Transfer::compareFrom);
+
+                //print all transfers - should be sorted by fromStopId
+                //for (int i=0;i<transfers.size();i++) System.out.println("transfers["+i+"] = "+transfers.get(i).toString());
+
+                /* i starts at the lowest numbered node and j starts at the lowest numbered transfer.
+                   find the first transfer from node i, and then add all other transfers from node i
+                   in sequence. j will now point to the first transfer from the next node. repeat these
+                   steps for the next node */
+
+                //start at lowest numbered transfer (according to fromStopId)
+                int j=0;
+                boolean skipRestOfNodes = false;
+
+                //System.out.println("nodes.length = "+nodes.length);
+                //for each node find transfers from it
+                for (int i=0;i<nodes.length;i++)
+                {
+                    //System.out.println("checking node "+i);
+                    int previousToStopId = -1;
+
+                    //if (i%2000==0) System.out.println(i);
+                    //if all transfers have been checked there is nothing left to compare
+                    if (skipRestOfNodes) break;
+
+                    boolean allTransfersFound = false;
+
+                    while (!allTransfersFound) {
+                        //if all transfers have been checked there is nothing left to compare
+                        if (j >= transfers.size()) {
+                            allTransfersFound = true;
+                            skipRestOfNodes = true;
+                            break;
+                        }
+
+                        /* if current transfer's fromStopId and current node label are the same,
+                           and the transfer isn't a duplicate, add the transfer
+                          as a node to the edge, and add the edge to edges */
+
+                        else if (transfers.get(j).fromStopId == nodes[i].label) {
+                            if (transfers.get(j).toStopId != previousToStopId) {
+                                /*System.out.println(
+                                        "transfers.get(" + j + ").fromStopId = " + transfers.get(j).fromStopId
+                                       +", transfers.get(" + j + ").toStopId = " + transfers.get(j).toStopId
+                                       +", transfers.get(" + j + ").transferType = " + transfers.get(j).transferType
+                                       +", nodes[" + i + "].label = " + nodes[i].label
+                                       +", previousToStopId = " + previousToStopId);*/
+
+                                /* calculate weight of edge (if transferType is 0, then cost is 2,
+                                   if transferType is 2 then cost is minTransferTime/100 */
+                                float weight = 0.0f;
+
+                                //cost is 2 if transfer type is 0 (immediate transfer possible, from transfers.txt)
+                                if (transfers.get(j).transferType == 0) weight = 2.0f;
+                                    //cost is 1 if transfer type is 1 (from stop_times.txt)
+                                else if (transfers.get(j).transferType == 1) weight = 1.0f;
+                                    //cost is minimum transfer time/100 if transfer type is 2 (from transfers.txt)
+                                else if (transfers.get(j).transferType == 2)
+                                    weight = (transfers.get(j).minTransferTime / 100);
+                                else System.out.println("invalid transfer type" + transfers.get(j).transferType);
+
+                                //need to loop through nodes to get node corresponding to toStopId
+
+                                int toStopId = 0;
+                                for (int k = 0; k < nodes.length; k++) {
+                                    if (nodes[k].label == transfers.get(j).toStopId) toStopId = k;
+                                }
+
+                                //print out toStopIds
+                                //System.out.println("toStopId = " + toStopId);
+
+                                //add edge to nodes and edges
+                                Edge e = new Edge(nodes[i], nodes[toStopId], weight);
+
+                                nodes[i].addEdge(e);
+                                edges.add(e);
+
+                                previousToStopId = transfers.get(j).toStopId;
+                            }
+                            //go to next transfer and repeat checks in the next iteration of the loop
+                            j++;
+                        }
+
+                        //go to next transfer and repeat checks in the next iteration of the loop
+                        else if (transfers.get(j).fromStopId < nodes[i].label) {
+                            j++;
+                        }
+
+                        /* if the current transfer number is higher than the current node number then
+                          all transfers have been added, or there were no transfers from the current node */
+                        else if (transfers.get(j).fromStopId > nodes[i].label) {
+                            allTransfersFound = true;
+                        }
+                    }
+                }
+
+                //System.out.println("graph complete");
             } catch (Exception e) {
                 //System.err.format("Exception occurred trying to read '%s'.", filename);
                 e.printStackTrace();
@@ -107,6 +237,19 @@ public class Graph {
         }
     }
 
+    public int getNodeIndexFromLabel(int label)
+    {
+        int index = 0;
+        boolean indexFound = false;
+        while (!indexFound&&(index<this.nodes.length))
+        {
+            if (this.nodes[index].label==label) indexFound = true;
+            else index++;
+        }
+
+        if (index==this.nodes.length) return -1;
+        else return index;
+    }
     /**
      * Prints the nodes and their adjacent edges in a human friendly format.
      *
@@ -189,6 +332,10 @@ class Node {
 
         return -1;
     }
+
+    public int compareTo(Node o) {
+        return this.label - o.label;
+    }
 }
 
 /**
@@ -208,5 +355,11 @@ class Edge {
         this.dst = dst;
         this.weight = weight;
     }
+
+    public String toString()
+    {
+        return "("+this.src.label+","+this.dst.label+","+this.weight+")";
+    }
+
 }
 
