@@ -3,9 +3,9 @@ import java.util.*;
 public class PathDijkstra {
 
 	
-	ArrayList<Edge> edgeTo = new ArrayList<Edge>();
-	ArrayList<Double> distTo = new ArrayList<Double>();
-	ArrayList<Boolean> markedVertices = new ArrayList<Boolean>();
+	ArrayList<Edge> edgeTo;
+	ArrayList<Double> distTo;
+	ArrayList <Boolean> markedVertices;
 	double timeTaken;
 	boolean noPath = false;
 
@@ -30,9 +30,9 @@ public class PathDijkstra {
     	if (!noPath)
     	{
 			//initialising edgeTo and distTo
-			edgeTo.clear();
-			distTo.clear();
-			markedVertices.clear();
+			edgeTo = new ArrayList<>();
+			distTo = new ArrayList<>();
+			markedVertices = new ArrayList<>();
 
 			for (int i=0;i<inputGraph.nodes.length;i++)
 			{

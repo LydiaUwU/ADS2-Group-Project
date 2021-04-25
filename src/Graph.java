@@ -20,7 +20,7 @@ public class Graph {
     ArrayList<Transfer> transfers = new ArrayList<Transfer>();
 
     /**
-     * @param filename: Filename of .txt file to use to generate the graph.
+     * @param filenames: Filename of .txt file to use to generate the graph.
      */
 
     /* stops.txt, stop_times.txt, transfers.txt#
