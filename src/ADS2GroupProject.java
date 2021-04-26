@@ -42,5 +42,29 @@ public class ADS2GroupProject {
 
         for (int i=0;i<stopsGraph.nodes[646].edges.size();i++)
             System.out.println(stopsGraph.nodes[646].edges.get(i).toString());
+
+        //testing TST
+        TST testTST = new TST();
+        testTST.put("she");
+        testTST.put("sells");
+        testTST.put("sea");
+        testTST.put("shells");
+        testTST.put("by");
+        testTST.put("the");
+        testTST.put("sea");
+        testTST.put("shore");
+
+        System.out.println(testTST.get("she"));
+        System.out.println(testTST.get("sells"));
+        System.out.println(testTST.get("sea"));
+        System.out.println(testTST.get("shells"));
+        System.out.println(testTST.get("by"));
+        System.out.println(testTST.get("the"));
+        System.out.println(testTST.get("sea"));
+        System.out.println(testTST.get("shore"));
+
+        System.out.println(testTST.get("some"));
+        System.out.println(testTST.get("fake"));
+        System.out.println(testTST.get("words"));
     }
 }
