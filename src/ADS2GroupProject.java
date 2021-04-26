@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 
 //this is the main class for now
 //sample line that was changed
-class ADS2GroupProject {
+public class ADS2GroupProject {
     public static void main(String[] args) {
         // create graph with edges taken from stop_times.txt and transfers.txt
 
