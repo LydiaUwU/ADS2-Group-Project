@@ -16,7 +16,7 @@ public class TST {
         System.out.println("Putting "+key+" starting from "+d);
         char c = key.charAt(d);
 
-        if (d == key.length()-1) {
+        if ((x == null||(int) x.value == 0)&&(d == key.length()-1)) {
             System.out.println("Putting "+key+", at end, adding "+key.charAt(d)+")");
             x = new TSTNode();
             x.value = key.charAt(d);

@@ -55,6 +55,7 @@ public class ADS2GroupProject {
         testTST.put("shore");
 
         System.out.println(testTST.get("she"));
+        //sells doesn't work correctly
         System.out.println(testTST.get("sells"));
         System.out.println(testTST.get("sea"));
         System.out.println(testTST.get("shells"));
