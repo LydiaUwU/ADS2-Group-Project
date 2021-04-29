@@ -110,6 +110,8 @@ public class ADS2GroupProject {
                     System.out.println("Type the start of a stop name (or type \"quit\" to quit) and then press ENTER: ");
                     inputScanner = new Scanner(System.in);
 
+                    //TODO Use a function of inputScanner that gets the entire line, not just the first word
+
                     input = inputScanner.next();
 
                     if (input.equals("quit")) innerLoop = false;

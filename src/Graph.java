@@ -302,6 +302,8 @@ public class Graph {
             //System.out.println("transfers.get("+i+").arrivalTime = ["+transfers.get(i).arrivalTime+"]");
             if (transfers.get(i).arrivalTime.equals(arrivalTime))
             {
+                //TODO rewrite this so it gets the info for all stops with the same trip id as transfers.get(i)
+
                 System.out.println("Trip "+transfers.get(i).tripId+" has arrival time "+
                         transfers.get(i).arrivalTime);
             }
