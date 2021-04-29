@@ -48,15 +48,18 @@ public class ADS2GroupProject {
 
         boolean loop = true;
 
-        while (loop)
+        while (!loop)
         {
-            System.out.println("Type the start of a stop name and then press ENTER: ");
+            System.out.println("Type the start of a stop name (or \"quit\" to quit) and then press ENTER: ");
             Scanner inputScanner = new Scanner(System.in);
 
             String input = inputScanner.next();
 
+            if (input.equals("quit")) loop = false;
             stopsGraph.stops.getSubtree(stopsGraph.stops.getNodeFromKey(input.toUpperCase()),input.toUpperCase(), true);
         }
+
+        stopsGraph.getTripsFromArrivalTime("5:26:28");
 
     }
 }

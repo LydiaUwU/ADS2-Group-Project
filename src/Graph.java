@@ -128,7 +128,7 @@ public class Graph {
 
                     //add current transfer to transfers
                     transfers.add(new Transfer(Integer.parseInt(currentLine[0]),
-                            Integer.parseInt(currentLine[1]),Integer.parseInt(currentLine[2]),time));
+                            Integer.parseInt(currentLine[1]),Integer.parseInt(currentLine[2]),time, -1, ""));
                 }
 
                 /*
@@ -164,7 +164,7 @@ public class Graph {
                     if (currentTripId==previousTripId)
                     {
                         //add current transfer to transfers
-                        transfers.add(new Transfer(previousStopId, currentStopId,1,0));
+                        transfers.add(new Transfer(previousStopId, currentStopId,1,0, currentTripId, currentLine[1].trim()));
                     }
                     previousTripId = currentTripId;
                     previousStopId = currentStopId;
@@ -270,8 +270,6 @@ public class Graph {
                         }
                     }
                 }
-
-                //System.out.println("graph complete");
             } catch (Exception e) {
                 //System.err.format("Exception occurred trying to read '%s'.", filename);
                 e.printStackTrace();
@@ -292,20 +290,23 @@ public class Graph {
         if (index==this.nodes.length) return -1;
         else return index;
     }
-    /**
-     * Prints the nodes and their adjacent edges in a human friendly format.
-     *
 
-     public void printNodes() {
-     for (Node i : nodes) {
-     System.out.println("Node: " + i.label);
+    public void getTripsFromArrivalTime(String arrivalTime)
+    {
+        System.out.println("Arrival time: "+arrivalTime);
 
-     for (Edge j : i.edges) {
-     System.out.println("To: " + j.dst.label + ", Weight: " + j.weight + ",");
-     }
-     }
-     }
-     */
+        Collections.sort(transfers, Transfer::compareId);
+
+        for (int i=0;i<transfers.size();i++)
+        {
+            //System.out.println("transfers.get("+i+").arrivalTime = ["+transfers.get(i).arrivalTime+"]");
+            if (transfers.get(i).arrivalTime.equals(arrivalTime))
+            {
+                System.out.println("Trip "+transfers.get(i).tripId+" has arrival time "+
+                        transfers.get(i).arrivalTime);
+            }
+        }
+    }
 }
 
 /**
