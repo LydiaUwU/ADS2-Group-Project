@@ -26,7 +26,7 @@ public class ADS2GroupProject {
         /*646, 1278 should work but doesn't (heading towards the start, it takes another direction and says that
           one of the edges is null when shouldn't be*/
         PathDijkstra stopsPath1 = new PathDijkstra(stopsGraph, 841, 842);
-        ArrayList<Edge> shortestPath1 = new ArrayList<Edge>();
+        ArrayList<Edge> shortestPath1;
 
         if (stopsPath1.getShortestPath()!=null)
         {
@@ -61,7 +61,46 @@ public class ADS2GroupProject {
             if (input.equals("quit")) outerLoop = false;
             else if (input.equals("1"))
             {
-                System.out.println("Put shortest path here");
+                boolean innerLoop = true;
+                while (innerLoop)
+                {
+                    System.out.println("Enter ID of first stop (or type \"quit\" to quit)");
+                    input = inputScanner.next();
+                    if (input.equals("quit")) innerLoop = false;
+                    else
+                    {
+
+                        // If node/stop/whatever exists
+                        if (true)
+                        {
+
+                            System.out.println("Enter ID of second stop (or type \"quit\" to quit)");
+                            input = inputScanner.next();
+                            if (input.equals("quit")) innerLoop = false;
+                            else
+                            {
+                                // If 2nd node/stop/whatever exists
+                                if (true)
+                                {
+                                    // Do the thing, print path.
+                                    System.out.println("Put shortest path here");
+                                }
+                                else
+                                {
+                                    System.out.println("No stop by that ID found.");
+
+                                }
+
+                            }
+                        }
+                        else
+                        {
+                            System.out.println("No stop by that ID found.");
+                        }
+
+
+                    }
+                }
             }
             else if (input.equals("2"))
             {
@@ -70,6 +109,8 @@ public class ADS2GroupProject {
                 {
                     System.out.println("Type the start of a stop name (or type \"quit\" to quit) and then press ENTER: ");
                     inputScanner = new Scanner(System.in);
+
+                    //TODO Use a function of inputScanner that gets the entire line, not just the first word
 
                     input = inputScanner.next();
 
