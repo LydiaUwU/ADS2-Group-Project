@@ -105,19 +105,22 @@ public class ADS2GroupProject {
             else if (input.equals("2"))
             {
                 boolean innerLoop = true;
-                while (innerLoop)
-                {
+                while (innerLoop) {
                     System.out.println("Type the start of a stop name (or type \"quit\" to quit) and then press ENTER: ");
-                    inputScanner = new Scanner(System.in);
+                    try {
+                        inputScanner = new Scanner(System.in);
 
-                    //TODO Use a function of inputScanner that gets the entire line, not just the first word
+                        //TODO check edge cases
 
-                    input = inputScanner.next();
+                        input = inputScanner.nextLine();
 
-                    if (input.equals("quit")) innerLoop = false;
-                    else
-                    {
-                        stopsGraph.stops.getSubtree(stopsGraph.stops.getNodeFromKey(input.toUpperCase()), input.toUpperCase(), true);
+                        if (input.equals("quit")) innerLoop = false;
+                        else {
+                            stopsGraph.stops.getSubtree(stopsGraph.stops.getNodeFromKey(input.toUpperCase()), input.toUpperCase(), true);
+                        }
+                    }
+                    catch (StringIndexOutOfBoundsException e) {
+                        System.out.println("Nothing entered.");
                     }
                 }
             }

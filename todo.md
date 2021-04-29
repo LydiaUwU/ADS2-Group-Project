@@ -10,7 +10,7 @@ Work on basic functionality before doing this.
 #### Basic functionality (10%):
 Works correctly.
 #### Edge cases (10%):
-*As far as I can tell, most edge cases are covered, but it only checks the first word of the input (use a different way of getting input from the user that gets all words entered). Edit code for user input after where it says "Type the start of a stop name (or type \"quit\" to quit) and then press ENTER: " in ADS2GroupProject.java.*
+*As far as I can tell, most edge cases are covered. Code for user input is after where it says "Type the start of a stop name (or type \"quit\" to quit) and then press ENTER: " in ADS2GroupProject.java.*
 
 
 ### Part 3 (searching for trips with a given arrival time):
