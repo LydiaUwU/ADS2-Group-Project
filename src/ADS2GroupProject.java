@@ -45,7 +45,8 @@ public class ADS2GroupProject {
 
         //testing TST
         TST testTST = new TST();
-        /*testTST.put("she");
+
+        testTST.put("she");
         testTST.put("sells");
         testTST.put("sea");
         testTST.put("shells");
@@ -57,7 +58,9 @@ public class ADS2GroupProject {
         testTST.put("zzzzzzzz");
         testTST.put("REAL STREET REAL STREET REAL STREET TEST 123");
 
-        System.out.println(testTST.get("she"));
+        System.out.println(testTST.getSubtree());
+
+        /*System.out.println(testTST.get("she"));
         //sells doesn't work correctly
         System.out.println(testTST.get("sells"));
         System.out.println(testTST.get("sea"));

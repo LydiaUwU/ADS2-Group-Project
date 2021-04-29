@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class TST {
     private TSTNode root = new TSTNode();
 
@@ -99,5 +101,37 @@ public class TST {
             /        +x.value+", x.terminal = "+x.terminal+", c = "+c+")");*/
             return get(x.next[1], key, d + 1);
         }
+    }
+
+    public ArrayList<String> getSubtree() {
+        ArrayList<String> subtree = new ArrayList<String>();
+        subtree.addAll(getSubtree(root, ""));
+        return subtree;
+    }
+    private ArrayList<String> getSubtree(TSTNode x, String currentPath) {
+        ArrayList<String> subtree = new ArrayList<String>();
+        if (x==null) return null;
+        String newPath = currentPath;
+        if (x.terminal)
+        {
+            newPath = currentPath + x.value;
+            subtree.add(newPath);
+            System.out.println("adding current path "+newPath);
+        }
+        for (int i=0;i<3;i++)
+        {
+            try
+            {
+                if (i==1) newPath = currentPath + x.value;
+                else newPath = currentPath;
+
+                subtree.addAll(getSubtree(x.next[i], newPath));
+            }
+            catch (NullPointerException e)
+            {
+
+            }
+        }
+        return subtree;
     }
 }
