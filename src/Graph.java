@@ -19,6 +19,8 @@ public class Graph {
     //not sure where to put this
     ArrayList<Transfer> transfers = new ArrayList<Transfer>();
 
+    TST stops = new TST();
+
     /**
      * @param filenames: Filename of .txt file to use to generate the graph.
      */
@@ -31,6 +33,10 @@ public class Graph {
 
             // Read file and use data to build graph
             try {
+                /*
+                --------------- STOPS.TXT ---------------
+                 */
+
                 /* getting number of stops by seeing how many lines are in stops.txt - make more efficient
                    also adapt this part to create a ternary search tree */
                 int numberOfStops = 0;
@@ -45,8 +51,44 @@ public class Graph {
                 for the nodes */
                 while(stopsScanner.hasNextLine())
                 {
-                    stopNumbers.add(Integer.parseInt(stopsScanner.nextLine().trim().split(",")[0]));
+                    String[] currentLine = stopsScanner.nextLine().trim().split(",");
+
+                    //adding current stop to stopNumbers
+                    stopNumbers.add(Integer.parseInt(currentLine[0]));
                     numberOfStops++;
+
+                    //make stop names more usable by putting some words at the end
+                    String stopName = currentLine[2];
+
+                    if (stopName.substring(0,8).equals("FLAGSTOP"))
+                    {
+                        stopName = stopName.substring(9) + " " + stopName.substring(0,8);
+                    }
+
+                    if (stopName.substring(0,2).equals("WB")||
+                        stopName.substring(0,2).equals("NB")||
+                        stopName.substring(0,2).equals("SB")||
+                        stopName.substring(0,2).equals("EB"))
+                    {
+                        stopName = stopName.substring(3) + " " + stopName.substring(0,2);
+                    }
+
+                    //adding current stop to stops TST
+                    ArrayList<String> stopInfo = new ArrayList<String>();
+
+                    stopInfo.add(currentLine[3]); //description
+                    stopInfo.add(currentLine[0]); //id
+                    stopInfo.add(currentLine[1]); //code
+                    stopInfo.add(currentLine[4]); //lat
+                    stopInfo.add(currentLine[5]); //lon
+                    stopInfo.add(currentLine[6]); //zone id
+                    stopInfo.add(currentLine[7]); //url
+                    stopInfo.add(currentLine[8]); //location type
+                    if (currentLine.length>9) stopInfo.add(currentLine[9]); //parent station
+                    else stopInfo.add("N/A");
+
+                    //add current stop to TST, with the stop id as key, and give the other stop info too
+                    stops.put(stopName, stopInfo);
                 }
 
                 //set size of nodes array to the number of stops
