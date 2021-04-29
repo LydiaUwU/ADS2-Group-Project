@@ -46,20 +46,61 @@ public class ADS2GroupProject {
         //testing stop info
         //stopsGraph.stops.getSubtree();
 
-        boolean loop = true;
+        boolean outerLoop = true;
 
-        while (!loop)
+        while (outerLoop)
         {
-            System.out.println("Type the start of a stop name (or \"quit\" to quit) and then press ENTER: ");
+            System.out.println("Enter the number of your choice (or type \"quit\" to quit):\n" +
+                    "1: Shortest path between 2 bus stops\n" +
+                    "2: Search for bus stops by name\n" +
+                    "3: Search for trips with a given arrival time");
             Scanner inputScanner = new Scanner(System.in);
 
             String input = inputScanner.next();
 
-            if (input.equals("quit")) loop = false;
-            stopsGraph.stops.getSubtree(stopsGraph.stops.getNodeFromKey(input.toUpperCase()),input.toUpperCase(), true);
+            if (input.equals("quit")) outerLoop = false;
+            else if (input.equals("1"))
+            {
+                System.out.println("Put shortest path here");
+            }
+            else if (input.equals("2"))
+            {
+                boolean innerLoop = true;
+                while (innerLoop)
+                {
+                    System.out.println("Type the start of a stop name (or type \"quit\" to quit) and then press ENTER: ");
+                    inputScanner = new Scanner(System.in);
+
+                    input = inputScanner.next();
+
+                    if (input.equals("quit")) innerLoop = false;
+                    else
+                    {
+                        stopsGraph.stops.getSubtree(stopsGraph.stops.getNodeFromKey(input.toUpperCase()), input.toUpperCase(), true);
+                    }
+                }
+            }
+            else if (input.equals("3"))
+           {
+               boolean innerLoop = true;
+               while (innerLoop)
+               {
+                   System.out.println("Enter a stop time in the format hh:mm:ss (or type \"quit\" to quit) and then press ENTER: ");
+                   inputScanner = new Scanner(System.in);
+
+                   input = inputScanner.next();
+
+                   if (input.equals("quit")) innerLoop = false;
+                   else {
+                       stopsGraph.getTripsFromArrivalTime(input);
+                   }
+               }
+
+           }
+           else
+           {
+                System.out.println("Not a valid option.");
+           }
         }
-
-        stopsGraph.getTripsFromArrivalTime("5:26:28");
-
     }
 }
