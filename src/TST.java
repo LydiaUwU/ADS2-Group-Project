@@ -8,16 +8,23 @@ public class TST {
     }
 
     public void put(String key) {
-        System.out.println("Putting "+key+" starting from root");
+        //System.out.println("\n~~~~~~~~~~~~~~~Putting "+key+" starting from root~~~~~~~~~~~~~~~");
         root = put(root, key, 0);
     }
 
     private TSTNode put(TSTNode x, String key, int d) {
-        System.out.println("Putting "+key+" starting from "+d);
+        //System.out.println("-----Putting "+key+" starting from "+d+"-----");
         char c = key.charAt(d);
 
-        if ((x == null||(int) x.value == 0)&&(d == key.length()-1)) {
-            System.out.println("Putting "+key+", at end, adding "+key.charAt(d)+")");
+        //this bit updates the TST if a previously added word is added
+        if ((x!=null)&&(x.value == c)&&(d == key.length()-1))
+        {
+            //System.out.println("Key "+key+" already in TST, current character is"+key.charAt(d));
+            return x;
+        }
+
+        else if ((x == null||(int) x.value == 0)&&(d == key.length()-1)) {
+            //System.out.println("Putting "+key+", at end, adding "+key.charAt(d));
             x = new TSTNode();
             x.value = key.charAt(d);
             x.terminal = true;
@@ -25,7 +32,7 @@ public class TST {
         }
         if (x == null||(int) x.value == 0)
         {
-            System.out.println("Putting "+key+", at "+d+", making new node (key.length() = "+key.length()+", adding "+key.charAt(d)+")");
+            //System.out.println("Putting "+key+", at "+d+", making new node, then heading to middle child (key.length() = "+key.length()+", adding "+key.charAt(d)+")");
             x = new TSTNode();
             x.terminal = false;
             x.value = key.charAt(d);
@@ -34,17 +41,17 @@ public class TST {
 
         else if (x.value > c)
         {
-            System.out.println("Putting "+key+", at "+d+", taking left branch (x.value = "+x.value+", c = "+c+")");
+            //System.out.println("Putting "+key+", at "+d+", taking left branch (x.value = "+x.value+", c = "+c+")");
             x.next[0] = put(x.next[0], key, d);
         }
         else if (x.value < c)
         {
-            System.out.println("Putting "+key+", at "+d+", taking right branch (x.value = "+x.value+", c = "+c+")");
+            //System.out.println("Putting "+key+", at "+d+", taking right branch (x.value = "+x.value+", c = "+c+")");
             x.next[2] = put(x.next[2], key, d);
         }
         else
         {
-            System.out.println("Putting "+key+", at "+d+", taking existing centre branch (x.value = "+x.value+", c = "+c+")");
+            //System.out.println("Putting "+key+", at "+d+", taking existing centre branch (x.value = "+x.value+", c = "+c+")");
             x.next[1] = put(x.next[1], key, d+1);
         }
         return x;
@@ -55,14 +62,14 @@ public class TST {
     }
 
     public boolean get(String key) {
-        System.out.println("Getting "+key+", starting from root");
+        //System.out.println("Getting "+key+", starting from root");
         TSTNode x = get(root,key,0);
 
         return (x != null);
     }
 
     private TSTNode get(TSTNode x, String key, int d) {
-        System.out.println("----------");
+        //System.out.println("----------");
         if (x == null) {
             System.out.println("Getting "+key+", not found");
             return null;
@@ -74,22 +81,22 @@ public class TST {
         }
         char c = key.charAt(d);
 
-        System.out.println("x.value = "+x.value);
+        //System.out.println("x.value = "+x.value);
 
         if (x.value > c)
         {
-            System.out.println("Getting "+key+", at "+d+", taking left branch (x.value = "+x.value+", c = "+c+")");
+            //System.out.println("Getting "+key+", at "+d+", taking left branch (x.value = "+x.value+", c = "+c+")");
             return get(x.next[0], key,d);
         }
         else if (x.value < c)
         {
-            System.out.println("Getting "+key+", at "+d+", taking right branch (x.value = "+x.value+", c = "+c+")");
+            //System.out.println("Getting "+key+", at "+d+", taking right branch (x.value = "+x.value+", c = "+c+")");
             return get(x.next[2], key,d);
         }
         else
         {
-            System.out.println("Getting "+key+", at "+d+", taking existing centre branch, x.value = "
-                    +x.value+", x.terminal = "+x.terminal+", c = "+c+")");
+            /*System.out.println("Getting "+key+", at "+d+", taking existing centre branch, x.value = "
+            /        +x.value+", x.terminal = "+x.terminal+", c = "+c+")");*/
             return get(x.next[1], key, d + 1);
         }
     }

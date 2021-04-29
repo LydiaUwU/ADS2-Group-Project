@@ -45,7 +45,7 @@ public class ADS2GroupProject {
 
         //testing TST
         TST testTST = new TST();
-        testTST.put("she");
+        /*testTST.put("she");
         testTST.put("sells");
         testTST.put("sea");
         testTST.put("shells");
@@ -53,6 +53,9 @@ public class ADS2GroupProject {
         testTST.put("the");
         testTST.put("sea");
         testTST.put("shore");
+        testTST.put("aaaaaaaa");
+        testTST.put("zzzzzzzz");
+        testTST.put("REAL STREET REAL STREET REAL STREET TEST 123");
 
         System.out.println(testTST.get("she"));
         //sells doesn't work correctly
@@ -67,5 +70,10 @@ public class ADS2GroupProject {
         System.out.println(testTST.get("some"));
         System.out.println(testTST.get("fake"));
         System.out.println(testTST.get("words"));
+
+        System.out.println(testTST.get("aaaaaaaa"));
+        System.out.println(testTST.get("zzzzzzzz"));
+        System.out.println(testTST.get("REAL STREET REAL STREET REAL STREET TEST 123"));
+        System.out.println(testTST.get("REAL STREET REAL STREET REAL STREET TEST 123 "));*/
     }
 }
