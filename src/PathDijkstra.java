@@ -1,8 +1,6 @@
 import java.util.*;
 
 public class PathDijkstra {
-
-	
 	ArrayList<Edge> edgeTo;
 	ArrayList<Double> distTo;
 	ArrayList <Boolean> markedVertices;
@@ -20,29 +18,25 @@ public class PathDijkstra {
 	boolean verbose = false;
 	
     PathDijkstra (Graph inputGraph, int k, int l){
-
     	graphIn = inputGraph;
     	startLabel = k;
     	endLabel = l;
 
     	double maxDistance = 0;
 
-    	if (!noPath)
-    	{
+    	if (!noPath) {
 			//initialising edgeTo and distTo
 			edgeTo = new ArrayList<>();
 			distTo = new ArrayList<>();
 			markedVertices = new ArrayList<>();
 
-			for (int i=0;i<inputGraph.nodes.length;i++)
-			{
+			for (int i = 0; i < inputGraph.nodes.length; i++) {
 				edgeTo.add(null);
 				distTo.add(Double.POSITIVE_INFINITY);
 			}
 
 			distTo.set(k, 0.0);
-			for (int i=0;i<inputGraph.nodes.length;i++)
-			{
+			for (int i = 0; i < inputGraph.nodes.length; i++) {
 				markedVertices.add(false);
 			}
 
@@ -76,7 +70,7 @@ public class PathDijkstra {
 			}*/
 
 			//relaxing edges i number of times
-			for (int i=0;i<inputGraph.nodes.length;i++)
+			for (int i = 0; i < inputGraph.nodes.length; i++)
 			{
 				//if (verbose) System.out.println("~~~~~~~~~~iteration " + i + " ~~~~~~~~~~");
 				//System.out.println("inputGraph.nodes.length = " + inputGraph.nodes.length);
@@ -85,10 +79,8 @@ public class PathDijkstra {
 				double currentMinDistance = Double.POSITIVE_INFINITY;
 				int minVertex = 0;
 
-				for (currentVertexIndex=0;currentVertexIndex<inputGraph.nodes.length;currentVertexIndex++)
-				{
-					if ((distTo.get(currentVertexIndex) < currentMinDistance) && !markedVertices.get(currentVertexIndex))
-					{
+				for (currentVertexIndex = 0; currentVertexIndex < inputGraph.nodes.length; currentVertexIndex++) {
+					if ((distTo.get(currentVertexIndex) < currentMinDistance) && !markedVertices.get(currentVertexIndex)) {
 						minVertex = currentVertexIndex;
 						currentMinDistance = distTo.get(currentVertexIndex);
 					}
@@ -102,7 +94,7 @@ public class PathDijkstra {
 				}
 
 				relax(inputGraph, minVertex);
-				markedVertices.set(minVertex,true);
+				markedVertices.set(minVertex, true);
 
 				/*if (verbose)
 				{
@@ -157,13 +149,10 @@ public class PathDijkstra {
 			endIndex = graphIn.getNodeIndexFromLabel(l);
 	    }
     }
-	private void relax(Graph G, int v)
-	{
-		for (int i=0;i<G.nodes[v].edges.size();i++)
-	 	{    		
-	 		if (true) //G.nodes[v].edges.get(i) != null)
-	  		{
-	   			Edge e = G.nodes[v].edges.get(i);
+	private void relax(Graph G, int v) {
+		for (int i = 0; i < G.nodes[v].edges.size(); i++) {
+	 		if (true) { //G.nodes[v].edges.get(i) != null
+				Edge e = G.nodes[v].edges.get(i);
 	       		int w = graphIn.getNodeIndexFromLabel(e.dst.label);
 	    		
 	    		if (distTo.get(w) > distTo.get(v) + e.weight)
@@ -177,40 +166,31 @@ public class PathDijkstra {
     
     
     public ArrayList<Edge> getShortestPath(){
-
     	System.out.println("start label = "+startLabel);
 		ArrayList<Edge> pathEdges = new ArrayList<Edge>();
 
 		boolean startNodeFound = false;
 		boolean noPathFound = false;
 
-		if ((startIndex==-1)||(endIndex==-1)) return null;
+		if ((startIndex == -1) || (endIndex == -1)) return null;
 
 		Edge currentEdge = edgeTo.get(endIndex);
 
 		//System.out.println("edgeTo.size() = "+edgeTo.size());
 
-		while (!startNodeFound)
-		{
-			System.out.println("---------------\ncurrentEdge = "+currentEdge.toString());
+		while (!startNodeFound) {
+			System.out.println("---------------\ncurrentEdge = " + currentEdge.toString());
 			pathEdges.add(currentEdge);
-			if (currentEdge.src.label==startLabel)
-			{
+			if (currentEdge.src.label == startLabel) {
 				System.out.println("found start");
 				startNodeFound = true;
-			}
-			else
-			{
-				System.out.println("currentEdge.src.label = "+currentEdge.src.label);
-				System.out.println("graphIn.getNodeIndexFromLabel(currentEdge.src.label) = "
-				+graphIn.getNodeIndexFromLabel(currentEdge.src.label));
-				if (edgeTo.get(graphIn.getNodeIndexFromLabel(currentEdge.src.label))!=null)
-				{
+			} else {
+				System.out.println("currentEdge.src.label = " + currentEdge.src.label);
+				System.out.println("graphIn.getNodeIndexFromLabel(currentEdge.src.label) = " + graphIn.getNodeIndexFromLabel(currentEdge.src.label));
+				if (edgeTo.get(graphIn.getNodeIndexFromLabel(currentEdge.src.label))!=null) {
 					currentEdge = edgeTo.get(graphIn.getNodeIndexFromLabel(currentEdge.src.label));
-					System.out.println("currentEdge is now "+currentEdge.toString());
-				}
-				else
-				{
+					System.out.println("currentEdge is now " + currentEdge.toString());
+				} else {
 					noPathFound = true;
 					break;
 				}
@@ -220,5 +200,4 @@ public class PathDijkstra {
    		if (!noPathFound) return pathEdges;
    		else return null;
     }
-
 }

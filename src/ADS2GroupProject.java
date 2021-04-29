@@ -1,6 +1,6 @@
 import java.util.*;
-import java.io.File;
-import java.io.FileNotFoundException;
+
+//TODO: Convert to K&R and put spaces between terms
 
 //this is the main class for now
 //sample line that was changed
@@ -12,7 +12,7 @@ public class ADS2GroupProject {
         Graph stopsGraph = new Graph(filenames);
         
         //print out all edges in the graph, sorted by node (14975 edges, 8757 nodes total)
-        /*for (int i=0;i<stopsGraph.nodes.length;i++)
+        /* for (int i=0;i<stopsGraph.nodes.length;i++)
         {
             for (int j=0;j<stopsGraph.nodes[i].edges.size();j++)
             {

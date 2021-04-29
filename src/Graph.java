@@ -1,44 +1,35 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.File;
-import java.util.Comparator;
 import java.util.Collections;
 import java.util.Arrays;
 
 /**
  * Custom class to generate and store a graph based on a .txt file as specified in the assignment spec.
  *
- * @Author: Lydia MacBride
+ * @Authors: Lydia MacBride, David King
  */
 
 public class Graph {
     Node[] nodes;
     ArrayList<Edge> edges;
-    //not sure where to put this
-    ArrayList<Transfer> transfers = new ArrayList<Transfer>();
-
+    ArrayList<Transfer> transfers = new ArrayList<>();
     TST stops = new TST();
 
     /**
      * @param filenames: Filename of .txt file to use to generate the graph.
      */
 
-    /* stops.txt, stop_times.txt, transfers.txt#
-     (is this overkill? can the filenames just be given to the scanners directly?) /*/
+    // stops.txt, stop_times.txt, transfers.txt# (is this overkill? can the filenames just be given to the scanners directly?)
     Graph(String[] filenames) {
         if (filenames != null) {
             edges = new ArrayList<>();
 
             // Read file and use data to build graph
             try {
-                /*
-                --------------- STOPS.TXT ---------------
-                 */
+                // --------------- STOPS.TXT ---------------
 
-                /* getting number of stops by seeing how many lines are in stops.txt - make more efficient
-                   also adapt this part to create a ternary search tree */
+                // getting number of stops by seeing how many lines are in stops.txt - make more efficient also adapt this part to create a ternary search tree
                 int numberOfStops = 0;
                 ArrayList<Integer> stopNumbers = new ArrayList<>();
 
@@ -47,10 +38,8 @@ public class Graph {
                 //skip first line of stops.txt as it is just the variable names
                 stopsScanner.nextLine();
 
-                /* getting stops info (adding to ArrayList stopNumbers, which will be then used to create the labels
-                for the nodes */
-                while(stopsScanner.hasNextLine())
-                {
+                // getting stops info (adding to ArrayList stopNumbers, which will be then used to create the labels for the nodes
+                while(stopsScanner.hasNextLine()) {
                     String[] currentLine = stopsScanner.nextLine().trim().split(",");
 
                     //adding current stop to stopNumbers
@@ -60,21 +49,19 @@ public class Graph {
                     //make stop names more usable by putting some words at the end
                     String stopName = currentLine[2];
 
-                    if (stopName.substring(0,8).equals("FLAGSTOP"))
-                    {
+                    if (stopName.substring(0,8).equals("FLAGSTOP")) {
                         stopName = stopName.substring(9) + " " + stopName.substring(0,8);
                     }
 
                     if (stopName.substring(0,2).equals("WB")||
                         stopName.substring(0,2).equals("NB")||
                         stopName.substring(0,2).equals("SB")||
-                        stopName.substring(0,2).equals("EB"))
-                    {
+                        stopName.substring(0,2).equals("EB")) {
                         stopName = stopName.substring(3) + " " + stopName.substring(0,2);
                     }
 
                     //adding current stop to stops TST
-                    ArrayList<String> stopInfo = new ArrayList<String>();
+                    ArrayList<String> stopInfo = new ArrayList<>();
 
                     stopInfo.add(currentLine[3]); //description
                     stopInfo.add(currentLine[0]); //id
@@ -108,9 +95,7 @@ public class Graph {
                     System.out.println("nodes["+i+"] label = "+nodes[i].label);
                 }*/
 
-                /*
-                --------------- TRANSFERS.TXT ---------------
-                 */
+                // --------------- TRANSFERS.TXT ---------------
 
                 //open transfers.txt
                 Scanner transferScanner = new Scanner(new File(filenames[2]));
@@ -131,27 +116,25 @@ public class Graph {
                             Integer.parseInt(currentLine[1]),Integer.parseInt(currentLine[2]),time, -1, ""));
                 }
 
-                /*
-                  --------------- STOP_TIMES.TXT ---------------
-                */
+                // --------------- STOP_TIMES.TXT ---------------
 
                 //open stop_times.txt
                 Scanner stopTimesScanner = new Scanner(new File(filenames[1]));
 
-                        /*set previous line info to -1, so line 1 will never match with line 0
-                          (which is the variable names)*/
+                //set previous line info to -1, so line 1 will never match with line 0 (which is the variable names)
                 int previousTripId = -1;
                 int previousStopId = -1;
 
                 //skip first line of stop_times.txt as this is just the variable names
                 stopTimesScanner.nextLine();
 
-                        /*reading lines from stop_times.txt and adding them to transfers ArrayList.
-                          this is done by keeping the previous line's info in memory, and comparing it
-                          to the current line. if both have the same trip id, a transfer is added to transfers.
-                          note that the same transfer may occur many times during the day, so transfers has
-                          a lot of duplicates (time information is not currently stored yet).
-                         */
+                /*
+                  reading lines from stop_times.txt and adding them to transfers ArrayList.
+                  this is done by keeping the previous line's info in memory, and comparing it
+                  to the current line. if both have the same trip id, a transfer is added to transfers.
+                  note that the same transfer may occur many times during the day, so transfers has
+                  a lot of duplicates (time information is not currently stored yet).
+                 */
 
 
                 while(stopTimesScanner.hasNextLine()) {
@@ -161,8 +144,7 @@ public class Graph {
                     int currentTripId = Integer.parseInt(currentLine[0]);
                     int currentStopId = Integer.parseInt(currentLine[3]);
 
-                    if (currentTripId==previousTripId)
-                    {
+                    if (currentTripId==previousTripId) {
                         //add current transfer to transfers
                         transfers.add(new Transfer(previousStopId, currentStopId,1,0, currentTripId, currentLine[1].trim()));
                     }
@@ -191,8 +173,7 @@ public class Graph {
 
                 //System.out.println("nodes.length = "+nodes.length);
                 //for each node find transfers from it
-                for (int i=0;i<nodes.length;i++)
-                {
+                for (Node node : nodes) {
                     //System.out.println("checking node "+i);
                     int previousToStopId = -1;
 
@@ -212,9 +193,9 @@ public class Graph {
 
                         /* if current transfer's fromStopId and current node label are the same,
                            and the transfer isn't a duplicate, add the transfer
-                          as a node to the edge, and add the edge to edges */
+                           as a node to the edge, and add the edge to edges */
 
-                        else if (transfers.get(j).fromStopId == nodes[i].label) {
+                        else if (transfers.get(j).fromStopId == node.label) {
                             if (transfers.get(j).toStopId != previousToStopId) {
                                 /*System.out.println(
                                         "transfers.get(" + j + ").fromStopId = " + transfers.get(j).fromStopId
@@ -229,11 +210,10 @@ public class Graph {
 
                                 //cost is 2 if transfer type is 0 (immediate transfer possible, from transfers.txt)
                                 if (transfers.get(j).transferType == 0) weight = 2.0f;
-                                    //cost is 1 if transfer type is 1 (from stop_times.txt)
+                                //cost is 1 if transfer type is 1 (from stop_times.txt)
                                 else if (transfers.get(j).transferType == 1) weight = 1.0f;
-                                    //cost is minimum transfer time/100 if transfer type is 2 (from transfers.txt)
-                                else if (transfers.get(j).transferType == 2)
-                                    weight = (transfers.get(j).minTransferTime / 100);
+                                //cost is minimum transfer time/100 if transfer type is 2 (from transfers.txt)
+                                else if (transfers.get(j).transferType == 2) weight = ((float) transfers.get(j).minTransferTime / 100);
                                 else System.out.println("invalid transfer type" + transfers.get(j).transferType);
 
                                 //need to loop through nodes to get node corresponding to toStopId
@@ -247,9 +227,9 @@ public class Graph {
                                 //System.out.println("toStopId = " + toStopId);
 
                                 //add edge to nodes and edges
-                                Edge e = new Edge(nodes[i], nodes[toStopId], weight);
+                                Edge e = new Edge(node, nodes[toStopId], weight);
 
-                                nodes[i].addEdge(e);
+                                node.addEdge(e);
                                 edges.add(e);
 
                                 previousToStopId = transfers.get(j).toStopId;
@@ -259,13 +239,13 @@ public class Graph {
                         }
 
                         //go to next transfer and repeat checks in the next iteration of the loop
-                        else if (transfers.get(j).fromStopId < nodes[i].label) {
+                        else if (transfers.get(j).fromStopId < node.label) {
                             j++;
                         }
 
                         /* if the current transfer number is higher than the current node number then
                           all transfers have been added, or there were no transfers from the current node */
-                        else if (transfers.get(j).fromStopId > nodes[i].label) {
+                        else if (transfers.get(j).fromStopId > node.label) {
                             allTransfersFound = true;
                         }
                     }
@@ -277,12 +257,10 @@ public class Graph {
         }
     }
 
-    public int getNodeIndexFromLabel(int label)
-    {
+    public int getNodeIndexFromLabel(int label) {
         int index = 0;
         boolean indexFound = false;
-        while (!indexFound&&(index<this.nodes.length))
-        {
+        while (!indexFound&&(index<this.nodes.length)) {
             if (this.nodes[index].label==label) indexFound = true;
             else index++;
         }
@@ -291,19 +269,30 @@ public class Graph {
         else return index;
     }
 
-    public void getTripsFromArrivalTime(String arrivalTime)
-    {
-        System.out.println("Arrival time: "+arrivalTime);
+    /**
+     * Output the information for a provided trip
+     *
+     * @Authors: Lydia MacBride, David King
+     * @param arrivalTime:
+     */
+    public void getTripsFromArrivalTime(String arrivalTime) {
+        System.out.println("Arrival time: " + arrivalTime);
 
-        Collections.sort(transfers, Transfer::compareId);
+        transfers.sort(Transfer::compareId);
 
-        for (int i=0;i<transfers.size();i++)
-        {
-            //System.out.println("transfers.get("+i+").arrivalTime = ["+transfers.get(i).arrivalTime+"]");
-            if (transfers.get(i).arrivalTime.equals(arrivalTime))
-            {
-                System.out.println("Trip "+transfers.get(i).tripId+" has arrival time "+
-                        transfers.get(i).arrivalTime);
+        for (Transfer transfer : transfers) {
+            if (transfer.arrivalTime.equals(arrivalTime)) {
+                // Check for invalid transfer time
+                Scanner scanner = new Scanner(transfer.arrivalTime).useDelimiter(":");
+                if (scanner.nextInt() > 23 && scanner.nextInt() > 59 && scanner.nextInt() > 59) {
+                    System.out.println("Invalid arrival time found at: " + transfer.tripId);
+                    break;
+                }
+                scanner.close();
+
+                //TODO: List all visited stops
+
+                System.out.println("Trip " + transfer.tripId + " has arrival time " + transfer.arrivalTime);
             }
         }
     }
@@ -311,6 +300,8 @@ public class Graph {
 
 /**
  * Custom class that stores information about a path
+ *
+ * @Authors: Lydia MacBride
  */
 class Path {
     Node src, dst;
@@ -329,6 +320,8 @@ class Path {
 
 /**
  * Custom class that stores information about a Node
+ *
+ * @Authors: Lydia MacBride
  */
 class Node {
     int label;
@@ -383,6 +376,8 @@ class Node {
 
 /**
  * Custom class that stores information about an edge
+ *
+ * @Authors: Lydia MacBride
  */
 class Edge {
     Node src, dst;
@@ -405,4 +400,37 @@ class Edge {
     }
 
 }
+
+/*
+                                                   -#=
+                                   :-=======-.    ++:%
+                         #+*-  .==-:            .#-  %.              :
+                        :#  =*:                -#.   *=             %@++*+
+                        =+    ++         ::   +=     -#   :      =*%@@@#-
+                        +=            . :*  :+.       @.  -*-     .%%*+:
+                        #-   .       ===+             ..    -#=    -
+                      .#+.  :+    -++-*-                .     :**:
+                     .#.   =*.:=*+-:*+                  .-===++=+=:.
+                     *:  -##++-. -*=         :-++++=.            .:*@#-
+                      :+*-    -++:         .=:.                 :++-
+                  :=**=.        .::-        :-=++*++++:
+               =%@+:        ====----.     .=-.. .#    :         :====++=
+    .=: .=.      :+**-.      -+**%=-.     .:     #=-***:        .====:.:#-
+    -@@%@#.      :-  -+*-  ==:   #.  +=    -=++++*%-=+       -==-        +#:
+   :#@@@%%:     :*  +*-.:   .:   .#%#-            =         :=-.          .*#:
+   .:%@:       :#    -++:    %*=%*++  :+#@#               :#  -*%%*+-       .+#=.
+    .*:       -*        -+.  :  :.    :*@#               -%.:=-:.   .          :**-.
+             ++          +:             ::.:#.          +#.                      .##.
+           .#- =:      .*. --       .--++--:          :%+       ::             :+#:
+          =*:+%%      -@*=  :+:       .             .*@#         #::*       :+#+.
+        :%#**+#.     :+:      :+=                 :*@%:=*        :@--#    =*=:
+        +=:.*+                  .=+=:          :+%@%-   :-        =%..=
+          :%-                  .   .-=++++++*%@@@%-       -=.:==+++.
+            -+*=:             +=  +:        -@@@#.       *: +*:
+               .-+++=-.       @: .@         :%%-       -*:    =*-
+                    .:=+*+++-:*  :+       =#+:*+---=+**-        =#-
+                                          :     :-::              =#-
+                                                                    +#-
+                                                                      :
+ */
 
