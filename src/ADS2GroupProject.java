@@ -31,6 +31,8 @@ public class ADS2GroupProject {
                 boolean innerLoop = true;
                 while (innerLoop)
                 {
+                    //TODO check edge cases
+
                     System.out.println("Enter ID of first stop (or type \"quit\" to quit)");
                     input = inputScanner.next();
                     if (input.equals("quit")) innerLoop = false;
