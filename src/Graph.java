@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.Collections;
 import java.util.Arrays;
 
+//TODO: Remove unused code
+
 /**
  * Custom class to generate and store a graph based on a .txt file as specified in the assignment spec.
  *
@@ -144,7 +146,7 @@ public class Graph {
                     int currentTripId = Integer.parseInt(currentLine[0]);
                     int currentStopId = Integer.parseInt(currentLine[3]);
 
-                    if (currentTripId==previousTripId) {
+                    if (currentTripId == previousTripId) {
                         //add current transfer to transfers
                         transfers.add(new Transfer(previousStopId, currentStopId,1,0, currentTripId, currentLine[1].trim()));
                     }
@@ -276,24 +278,30 @@ public class Graph {
      * @param arrivalTime:
      */
     public void getTripsFromArrivalTime(String arrivalTime) {
-        System.out.println("Arrival time: " + arrivalTime);
+        // Check for invalid arrival time
+        Scanner scanner = new Scanner(arrivalTime).useDelimiter(":");
+        if (scanner.nextInt() > 23 || scanner.nextInt() > 59 || scanner.nextInt() > 59) {
+            System.out.println("Invalid arrival time provided.");
+            return;
+        }
+        scanner.close();
+
+        System.out.println("Showing results for trips with arrival time " + arrivalTime + ".");
 
         transfers.sort(Transfer::compareId);
 
+        int transfersFound = 0;
         for (Transfer transfer : transfers) {
             if (transfer.arrivalTime.equals(arrivalTime)) {
-                // Check for invalid transfer time
-                Scanner scanner = new Scanner(transfer.arrivalTime).useDelimiter(":");
-                if (scanner.nextInt() > 23 && scanner.nextInt() > 59 && scanner.nextInt() > 59) {
-                    System.out.println("Invalid arrival time found at: " + transfer.tripId);
-                    break;
-                }
-                scanner.close();
-
-                //TODO: List all visited stops
-
-                System.out.println("Trip " + transfer.tripId + " has arrival time " + transfer.arrivalTime);
+                System.out.println("Trip " + transfer.tripId);
+                transfersFound++;
             }
+        }
+
+        if (transfersFound >= 1) {
+            System.out.println(transfersFound + ((transfersFound == 1) ? " transfer" : " transfers" ) + " found.");
+        } else {
+            System.out.println("No transfers fitting search parameters found.");
         }
     }
 }
