@@ -10,6 +10,16 @@ public class Transfer {
     int fromStopId, toStopId, transferType, minTransferTime, tripId;
     String arrivalTime;
 
+    /**
+     * @param from: The source stop of the transfer.
+     * @param to: The destination stop of the transfer.
+     * @param type: The type of the transfer.
+     * @param time: The minimum time taken for the transfer.
+     * @param id: The trip id of the transfer.
+     * @param arrTime: The arrival time of the transfer.
+     * @Authors: David King
+     */
+
     Transfer(int from, int to, int type, int time, int id, String arrTime) {
         fromStopId = from;
         toStopId = to;
@@ -19,19 +29,45 @@ public class Transfer {
         arrivalTime = arrTime;
     }
 
-    // Compares fromStopId for 2 Transfers, used to sort transfers ArrayList so they can be added to the graph quicker
+    /**
+     * Compares the source stopIds of the 2 nodes.
+     *
+     * @param o: The node to compare to.
+     * @return int: The result of the comparison.
+     * @Authors: David King
+     */
     public int compareFrom(Transfer o) {
         return this.fromStopId - o.fromStopId;
     }
 
-    // Compares toStopId for 2 Transfers, used to sort transfers ArrayList so they can be added to the graph quicker
+    /**
+     * Compares the destination stopIds of the 2 nodes.
+     *
+     * @param o: The node to compare to.
+     * @return int: The result of the comparison
+     * @Authors: David King
+     */
     public int compareTo(Transfer o) {
         return this.toStopId - o.toStopId;
     }
 
+    /**
+     * Compares the tripIds of the 2 nodes.
+     *
+     * @param o: The node to compare to.
+     * @return int: The result of the comparison
+     * @Authors: David King
+     */
     public int compareId(Transfer o) {
         return this.tripId - o.tripId;
     }
+
+    /**
+     * Generates a string representation of the transfer.
+     *
+     * @return String: The string representation of the transfer.
+     * @Authors: David King
+     */
 
     public String toString() {
         return "(" + this.fromStopId + "," + this.toStopId + "," + this.transferType + "," + this.minTransferTime + ")";

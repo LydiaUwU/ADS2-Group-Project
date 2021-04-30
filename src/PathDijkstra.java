@@ -20,6 +20,14 @@ public class PathDijkstra {
 
     Graph graphIn;
 
+    /**
+     * Runs Dijkstra's algorithm on the input Graph.
+     *
+     * @param inputGraph: The graph to use.
+     * @param k: The id of the start node.
+     * @param l: The id of the end node.
+     * @Authors: David King
+     */
 
     PathDijkstra(Graph inputGraph, int k, int l) {
         graphIn = inputGraph;
@@ -71,6 +79,14 @@ public class PathDijkstra {
         }
     }
 
+    /**
+     * Given a node index, relax all edges coming from that node.
+     *
+     * @param G: The graph to use.
+     * @param v: The index of the vertex to relax.
+     * @Authors: David King
+     */
+
     private void relax(Graph G, int v) {
         for (int i = 0; i < G.nodes[v].edges.size(); i++) {
             if (true) { //G.nodes[v].edges.get(i) != null
@@ -84,6 +100,13 @@ public class PathDijkstra {
             }
         }
     }
+
+    /**
+     * Get the shortest path from startIndex to endIndex.
+     *
+     * @return ArrayList<Edge>: The shortest path.
+     * @Authors: David King
+     */
 
     public ArrayList<Edge> getShortestPath() {
         ArrayList<Edge> pathEdges = new ArrayList<Edge>();

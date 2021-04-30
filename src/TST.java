@@ -1,7 +1,28 @@
 import java.util.*;
 
+/**
+ * Class for handling the Ternary Search Tree of stop names.
+ *
+ * @Authors: David King
+ */
+
 public class TST {
     private TSTNode root = new TSTNode();
+
+    /**
+     * @param value: The letter represented by the TSTNode.
+     * @param terminal: Whether the TSTNode represents the end of a station name.
+     * @param next: The children of the current TSTNode.
+     * @param stopId: The stop id of the TSTNode.
+     * @param stopCode: The stop code of the TSTNode.
+     * @param stopDesc: The stop description of the TSTNode.
+     * @param stopLat: The stop latitude of the TSTNode.
+     * @param stopLon:  The stop longitude of the TSTNode.
+     * @param stopUrl:  The stop URL of the TSTNode.
+     * @param locationType:  The location type of the TSTNode.
+     * @param parentStation:  The parent station of the TSTNode.
+     * @Authors: David King
+     */
 
     private static class TSTNode {
         private char value;
@@ -20,10 +41,26 @@ public class TST {
         private String parentStation;
     }
 
+    /**
+     * Adds the given stop to the TST, starting from the root.
+     *
+     * @param key: The name of the stop to input.
+     * @param stopInfo: Information about the stop to input.
+     * @Authors: David King
+     */
     public void put(String key, ArrayList<String> stopInfo) {
         root = put(root, key, 0, stopInfo);
     }
 
+    /**
+     * Adds the given stop to the TST, starting from a given TSTNode.
+     *
+     *  @param x: The node to input.
+     * @param key: The name of the stop to input.
+     * @param d: The index of the current character being input.
+     * @param stopInfo: Information about the stop to input.
+     * @Authors: David King
+     */
     private TSTNode put(TSTNode x, String key, int d, ArrayList<String> stopInfo) {
         char c = key.charAt(d);
 
@@ -61,43 +98,29 @@ public class TST {
         return x;
     }
 
-    public boolean contains(String key) {
-        return get(key);
-    }
-
-    public boolean get(String key) {
-        TSTNode x = get(root, key, 0);
-
-        return (x != null);
-    }
-
-    private TSTNode get(TSTNode x, String key, int d) {
-        if (x == null) {
-            System.out.println("Getting " + key + ", not found");
-            return null;
-        }
-
-        if (d == key.length() - 1 && x.terminal) {
-            System.out.println("Getting " + key + ", found");
-            return x;
-        }
-
-        char c = key.charAt(d);
-
-        if (x.value > c) {
-            return get(x.next[0], key, d);
-        } else if (x.value < c) {
-            return get(x.next[2], key, d);
-        } else {
-            return get(x.next[1], key, d + 1);
-        }
-    }
+    /**
+     * Checks if the given name is the name of a stop, starting at the root.
+     *
+     * @param key: The name of the stop to check.
+     * @return TSTNode: The node that matches the given key.
+     * @Authors: David King
+     */
 
     public TSTNode getNodeFromKey(String key) {
         TSTNode x = getNodeFromKey(root, key, 0);
 
         return (x);
     }
+
+    /**
+     * Checks if the given name is the name of a stop, starting from a given TSTNode.
+     *
+     * @param x: The current node.
+     * @param key: The name of the stop to input.
+     * @param d: The index of the current character being input.
+     * @return TSTNode: The node that matches the given key.
+     * @Authors: David King
+     */
 
     private TSTNode getNodeFromKey(TSTNode x, String key, int d) {
         if (x == null) {
@@ -123,11 +146,27 @@ public class TST {
         }
     }
 
+    /**
+     * Gets all nodes below the root.
+     *
+     * @return ArrayList<String>: THe list of nodes below the root.
+     * @Authors: David King
+     */
+
     public ArrayList<String> getSubtree() {
         ArrayList<String> subtree = new ArrayList<String>();
         subtree.addAll(getSubtree(root, "", true));
         return subtree;
     }
+
+    /**
+     * Gets all nodes below the root.
+     * @param x: The current node.
+     * @param currentPath: The path of nodes from the root to the current node.
+     * @param isStart: Whether the current node is the first node checked.
+     * @return ArrayList<String>: THe list of nodes below the root.
+     * @Authors: David King
+     */
 
     public ArrayList<String> getSubtree(TSTNode x, String currentPath, boolean isStart) {
         ArrayList<String> subtree = new ArrayList<String>();
@@ -163,6 +202,12 @@ public class TST {
         }
         return subtree;
     }
+
+    /**
+     * Prints out all the information for the given stop.
+     * @param x: The stop to check.
+     * @Authors: David King
+     */
 
     public void getStopInfo(TSTNode x) {
         if (x != null && x.terminal) {

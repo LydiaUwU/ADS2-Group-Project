@@ -254,6 +254,14 @@ public class Graph {
         }
     }
 
+    /**
+     * Given a node label (i.e. its id), return the position of that node in nodes[].
+     *
+     * @param label: The label of the node to input.
+     * @return int: The index of the input label.
+     * @Authors: David King
+     */
+
     public int getNodeIndexFromLabel(int label) {
         int index = 0;
         boolean indexFound = false;
@@ -275,7 +283,7 @@ public class Graph {
     /**
      * Output the information for a provided trip
      *
-     * @param arrivalTime:
+     * @param arrivalTime: Arrival time that is found at some point in the trip.
      * @Authors: Lydia MacBride, David King
      */
 
@@ -314,7 +322,8 @@ public class Graph {
     /**
      * Allow more useful searching of stop names by moving certain words to the end
      *
-     * @param input:
+     * @param input: The stop name as found in stops.txt.
+     * @return String: The parsed stop name.
      * @Authors: David King
      */
 
@@ -349,6 +358,12 @@ class Path {
         distance = -1.0;
     }
 
+    /**
+     * @param src: The start of the path segment.
+     * @param dst: The end of the path segment.
+     * @param distance: The length of the path segment.
+     *
+     */
     Path(Node src, Node dst, Double distance) {
         this.src = src;
         this.dst = dst;
@@ -410,6 +425,9 @@ class Node {
         return -1;
     }
 
+    /**
+        @param o: The node to compare to.
+    */
     public int compareTo(Node o) {
         return this.label - o.label;
     }
