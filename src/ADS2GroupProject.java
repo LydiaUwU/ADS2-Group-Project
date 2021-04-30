@@ -10,41 +10,6 @@ public class ADS2GroupProject {
 
         String[] filenames = {"inputs/stops.txt","inputs/stop_times.txt","inputs/transfers.txt"};
         Graph stopsGraph = new Graph(filenames);
-        
-        //print out all edges in the graph, sorted by node (14975 edges, 8757 nodes total)
-        /* for (int i=0;i<stopsGraph.nodes.length;i++)
-        {
-            for (int j=0;j<stopsGraph.nodes[i].edges.size();j++)
-            {
-                System.out.println(stopsGraph.nodes[i].edges.get(j).toString());
-                edgeCounter++;
-            }
-        }*/
-
-        //1477, 1866 no path
-        //1817, 1819 path (1817,1818,1819)
-        /*646, 1278 should work but doesn't (heading towards the start, it takes another direction and says that
-          one of the edges is null when shouldn't be*/
-        PathDijkstra stopsPath1 = new PathDijkstra(stopsGraph, 841, 842);
-        ArrayList<Edge> shortestPath1;
-
-        if (stopsPath1.getShortestPath()!=null)
-        {
-            shortestPath1 = stopsPath1.getShortestPath();
-
-            for (int i=0;i<shortestPath1.size();i++)
-            {
-                System.out.println(shortestPath1.get(i).toString());
-            }
-        }
-
-        else System.out.println("no path");
-
-        for (int i=0;i<stopsGraph.nodes[646].edges.size();i++)
-            System.out.println(stopsGraph.nodes[646].edges.get(i).toString());
-
-        //testing stop info
-        //stopsGraph.stops.getSubtree();
 
         boolean outerLoop = true;
 
@@ -61,6 +26,8 @@ public class ADS2GroupProject {
             if (input.equals("quit")) outerLoop = false;
             else if (input.equals("1"))
             {
+                int sourceStop, destinationStop;
+
                 boolean innerLoop = true;
                 while (innerLoop)
                 {
@@ -69,9 +36,9 @@ public class ADS2GroupProject {
                     if (input.equals("quit")) innerLoop = false;
                     else
                     {
-
+                        sourceStop = Integer.parseInt(input);
                         // If node/stop/whatever exists
-                        if (true)
+                        if (stopsGraph.getNodeIndexFromLabel(sourceStop)>=0)
                         {
 
                             System.out.println("Enter ID of second stop (or type \"quit\" to quit)");
@@ -79,11 +46,33 @@ public class ADS2GroupProject {
                             if (input.equals("quit")) innerLoop = false;
                             else
                             {
+                                destinationStop = Integer.parseInt(input);
+
                                 // If 2nd node/stop/whatever exists
-                                if (true)
+                                if (stopsGraph.getNodeIndexFromLabel(destinationStop)>=0)
                                 {
                                     // Do the thing, print path.
-                                    System.out.println("Put shortest path here");
+                                    PathDijkstra stopsPath = new PathDijkstra(stopsGraph, sourceStop, destinationStop);
+                                    ArrayList<Edge> shortestPath;
+
+                                    if (stopsPath.getShortestPath()!=null)
+                                    {
+                                        double totalCost = 0;
+
+                                        shortestPath = stopsPath.getShortestPath();
+
+                                        System.out.println("1:\t" + shortestPath.get(0).dst.name);
+                                        for (int i=0;i<shortestPath.size();i++)
+                                        {
+                                            System.out.println((i+2) + ":\t" + shortestPath.get(i).src.name);
+                                            totalCost += shortestPath.get(i).weight;
+                                        }
+
+                                        System.out.println("Cost: " + totalCost);
+
+                                    }
+
+                                    else System.out.println("No path found.");
                                 }
                                 else
                                 {

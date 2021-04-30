@@ -35,6 +35,9 @@ public class Graph {
                 int numberOfStops = 0;
                 ArrayList<Integer> stopNumbers = new ArrayList<>();
 
+                //this is to allow stop ids to be converted to stop names
+                ArrayList<String> stopNames = new ArrayList<>();
+
                 Scanner stopsScanner = new Scanner(new File(filenames[0]));
 
                 //skip first line of stops.txt as it is just the variable names
@@ -46,21 +49,14 @@ public class Graph {
 
                     //adding current stop to stopNumbers
                     stopNumbers.add(Integer.parseInt(currentLine[0]));
+
+                    //adding current stop to stopNames to allow stop id to stop name conversion
+                    String stopName = parseStopName(currentLine[2]);
+                    stopNames.add(stopName);
+
                     numberOfStops++;
 
                     //make stop names more usable by putting some words at the end
-                    String stopName = currentLine[2];
-
-                    if (stopName.substring(0,8).equals("FLAGSTOP")) {
-                        stopName = stopName.substring(9) + " " + stopName.substring(0,8);
-                    }
-
-                    if (stopName.substring(0,2).equals("WB")||
-                        stopName.substring(0,2).equals("NB")||
-                        stopName.substring(0,2).equals("SB")||
-                        stopName.substring(0,2).equals("EB")) {
-                        stopName = stopName.substring(3) + " " + stopName.substring(0,2);
-                    }
 
                     //adding current stop to stops TST
                     ArrayList<String> stopInfo = new ArrayList<>();
@@ -87,6 +83,7 @@ public class Graph {
                 for (int i = 0; i < numberOfStops; i++) {
                     nodes[i] = new Node(i);
                     nodes[i].label = stopNumbers.get(i);
+                    nodes[i].name = stopNames.get(i);
                 }
 
                 //sort stops by stop number, this will allow transfers to be added to the graph quicker
@@ -304,6 +301,31 @@ public class Graph {
             System.out.println("No transfers fitting search parameters found.");
         }
     }
+
+    /**
+     * Allow more useful searching of stop names by moving certain words to the end
+     *
+     * @Authors: David King
+     * @param input:
+     */
+
+    public String parseStopName(String input)
+    {
+        String output = input;
+        if (output.substring(0,8).equals("FLAGSTOP")) {
+            output = output.substring(9) + " " + output.substring(0,8);
+        }
+
+        if (output.substring(0,2).equals("WB")||
+                output.substring(0,2).equals("NB")||
+                output.substring(0,2).equals("SB")||
+                output.substring(0,2).equals("EB")) {
+            output = output.substring(3) + " " + output.substring(0,2);
+        }
+
+        return output;
+    }
+
 }
 
 /**
@@ -329,12 +351,14 @@ class Path {
 /**
  * Custom class that stores information about a Node
  *
- * @Authors: Lydia MacBride
+ * @Authors: Lydia MacBride, David King
  */
 class Node {
     int label;
     ArrayList<Edge> edges;
 
+    //used to allow stop id to stop name conversion
+    String name;
     /**
      * @param label: Integer label of the Node
      */
