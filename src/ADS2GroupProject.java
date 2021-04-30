@@ -36,50 +36,66 @@ public class ADS2GroupProject {
                     boolean innerLoop = true;
                     while (innerLoop) {
                         System.out.println("Enter ID of first stop (or type \"back\" to go back) and then press ENTER: ");
-                        input = inputScanner.next();
+                        input = inputScanner.nextLine();
                         if (input.equals("back")) {
                             innerLoop = false;
                         } else {
-                            sourceStop = Integer.parseInt(input);
+                            try {
+                                sourceStop = Integer.parseInt(input);
 
-                            // If 1st node exists
-                            if (stopsGraph.getNodeIndexFromLabel(sourceStop) >= 0) {
-                                System.out.println("Enter ID of second stop (or type \"back\" to go back) and then press ENTER: ");
-                                input = inputScanner.next();
+                                // If 1st node exists
+                                if (stopsGraph.getNodeIndexFromLabel(sourceStop) >= 0) {
+                                    System.out.println("Enter ID of second stop (or type \"back\" to go back) and then press ENTER: ");
+                                    input = inputScanner.nextLine();
 
-                                if (input.equals("back")) {
-                                    innerLoop = false;
-                                } else {
-                                    destinationStop = Integer.parseInt(input);
-
-                                    // If 2nd node exists
-                                    if (stopsGraph.getNodeIndexFromLabel(destinationStop) >= 0) {
-
-                                        PathDijkstra stopsPath = new PathDijkstra(stopsGraph, sourceStop, destinationStop);
-                                        ArrayList<Edge> shortestPath;
-
-                                        if (stopsPath.getShortestPath() != null) {
-                                            double totalCost = 0;
-
-                                            shortestPath = stopsPath.getShortestPath();
-                                            System.out.println("1:\t" + shortestPath.get(0).dst.name);
-
-                                            for (int i = 0; i < shortestPath.size(); i++) {
-                                                System.out.println((i + 2) + ":\t" + shortestPath.get(i).src.name);
-                                                totalCost += shortestPath.get(i).weight;
-                                            }
-
-                                            System.out.println("Cost: " + totalCost);
-
-                                        } else {
-                                            System.out.println("No path found.");
-                                        }
-
+                                    if (input.equals("back")) {
+                                        innerLoop = false;
                                     } else {
-                                        System.out.println("No stop by that ID found.");
+                                        try {
+                                            destinationStop = Integer.parseInt(input);
+
+                                            //If both stops are the same
+                                            if (sourceStop == destinationStop) {
+                                                System.out.println("Source stop and destination stop are the same.");
+                                            }
+                                            // If 2nd node exists
+                                            else if (stopsGraph.getNodeIndexFromLabel(destinationStop) >= 0) {
+
+                                                PathDijkstra stopsPath = new PathDijkstra(stopsGraph, sourceStop, destinationStop);
+                                                ArrayList<Edge> shortestPath;
+
+                                                if (stopsPath.getShortestPath() != null) {
+                                                    double totalCost = 0;
+
+                                                    shortestPath = stopsPath.getShortestPath();
+
+                                                    for (int i = shortestPath.size() - 1; i >= 0; i--) {
+                                                        System.out.println((shortestPath.size() - i - 1) + ":\t" + shortestPath.get(i).src.name);
+                                                        totalCost += shortestPath.get(i).weight;
+                                                    }
+
+                                                    System.out.println(shortestPath.size() - 1 + ":\t" + shortestPath.get(0).dst.name);
+
+                                                    totalCost = Math.round(totalCost * 100) / 100;
+
+                                                    System.out.println("Cost: " + totalCost);
+
+                                                } else {
+                                                    System.out.println("No path found.");
+                                                }
+                                            } else {
+                                                System.out.println("No stop by that ID found.");
+                                            }
+                                        }
+                                        catch (NumberFormatException e) {
+                                            System.out.println("No stop by that ID found.");
+                                        }
                                     }
+                                } else {
+                                    System.out.println("No stop by that ID found.");
                                 }
-                            } else {
+                            }
+                            catch (NumberFormatException e) {
                                 System.out.println("No stop by that ID found.");
                             }
                         }
