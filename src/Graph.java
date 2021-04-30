@@ -290,7 +290,10 @@ public class Graph {
         int transfersFound = 0;
         for (Transfer transfer : transfers) {
             if (transfer.arrivalTime.equals(arrivalTime)) {
-                System.out.println("Trip " + transfer.tripId);
+                System.out.println("Trip " + transfer.tripId +
+                                   ", From " + transfer.fromStopId +
+                                   ", To " + transfer.toStopId +
+                                   ", Type " + transfer.transferType);
                 transfersFound++;
             }
         }
@@ -428,9 +431,8 @@ class Edge {
 
     public String toString()
     {
-        return "("+this.src.label+","+this.dst.label+","+this.weight+")";
+        return "(" + this.src.label + "," + this.dst.label + "," + this.weight + ")";
     }
-
 }
 
 /*
