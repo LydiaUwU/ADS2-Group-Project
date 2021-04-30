@@ -15,7 +15,7 @@ Works correctly.
 
 ### Part 3 (searching for trips with a given arrival time):
 #### Basic functionality (10%):
-*Currently returns a list of trip IDs, but need to add all the info for the trip (i.e. each stop). Add code to get info of all stops which have a trip ID in this list in getTripsFromArrivalTime() in Graph.java.* Check that input time is valid (<=23:59:59).
+Works correctly.
 #### Edge cases (10%):
 Work on basic functionality before doing this.
 
