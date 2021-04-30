@@ -44,7 +44,7 @@ public class Graph {
                 stopsScanner.nextLine();
 
                 // getting stops info (adding to ArrayList stopNumbers, which will be then used to create the labels for the nodes
-                while(stopsScanner.hasNextLine()) {
+                while (stopsScanner.hasNextLine()) {
                     String[] currentLine = stopsScanner.nextLine().trim().split(",");
 
                     //adding current stop to stopNumbers
@@ -69,8 +69,11 @@ public class Graph {
                     stopInfo.add(currentLine[6]); //zone id
                     stopInfo.add(currentLine[7]); //url
                     stopInfo.add(currentLine[8]); //location type
-                    if (currentLine.length>9) stopInfo.add(currentLine[9]); //parent station
-                    else stopInfo.add("N/A");
+                    if (currentLine.length > 9) {
+                        stopInfo.add(currentLine[9]); //parent station
+                    } else {
+                        stopInfo.add("N/A");
+                    }
 
                     //add current stop to TST, with the stop id as key, and give the other stop info too
                     stops.put(stopName, stopInfo);
@@ -89,11 +92,6 @@ public class Graph {
                 //sort stops by stop number, this will allow transfers to be added to the graph quicker
                 Arrays.sort(nodes, Node::compareTo);
 
-                //print out sorted array of nodes
-                /*for (int i = 0; i < nodes.length; i++) {
-                    System.out.println("nodes["+i+"] label = "+nodes[i].label);
-                }*/
-
                 // --------------- TRANSFERS.TXT ---------------
 
                 //open transfers.txt
@@ -103,16 +101,18 @@ public class Graph {
                 transferScanner.nextLine();
 
                 //reading lines from transfers.txt and adding them to transfers ArrayList
-                while(transferScanner.hasNextLine()) {
+                while (transferScanner.hasNextLine()) {
                     String[] currentLine = transferScanner.nextLine().trim().split(",");
 
                     //if no value for minTransferTime is provided, set it to 0 for simplicity
                     int time = 0;
-                    if (currentLine.length==4) time = Integer.parseInt(currentLine[3]);
+                    if (currentLine.length == 4) {
+                        time = Integer.parseInt(currentLine[3]);
+                    }
 
                     //add current transfer to transfers
                     transfers.add(new Transfer(Integer.parseInt(currentLine[0]),
-                            Integer.parseInt(currentLine[1]),Integer.parseInt(currentLine[2]),time, -1, ""));
+                            Integer.parseInt(currentLine[1]), Integer.parseInt(currentLine[2]), time, -1, ""));
                 }
 
                 // --------------- STOP_TIMES.TXT ---------------
@@ -136,7 +136,7 @@ public class Graph {
                  */
 
 
-                while(stopTimesScanner.hasNextLine()) {
+                while (stopTimesScanner.hasNextLine()) {
                     String[] currentLine = stopTimesScanner.nextLine().trim().split(",");
 
                     //read current line info
@@ -145,7 +145,7 @@ public class Graph {
 
                     if (currentTripId == previousTripId) {
                         //add current transfer to transfers
-                        transfers.add(new Transfer(previousStopId, currentStopId,1,0, currentTripId, currentLine[1].trim()));
+                        transfers.add(new Transfer(previousStopId, currentStopId, 1, 0, currentTripId, currentLine[1].trim()));
                     }
                     previousTripId = currentTripId;
                     previousStopId = currentStopId;
@@ -158,16 +158,13 @@ public class Graph {
                 Collections.sort(transfers, Transfer::compareTo);
                 Collections.sort(transfers, Transfer::compareFrom);
 
-                //print all transfers - should be sorted by fromStopId
-                //for (int i=0;i<transfers.size();i++) System.out.println("transfers["+i+"] = "+transfers.get(i).toString());
-
                 /* i starts at the lowest numbered node and j starts at the lowest numbered transfer.
                    find the first transfer from node i, and then add all other transfers from node i
                    in sequence. j will now point to the first transfer from the next node. repeat these
                    steps for the next node */
 
                 //start at lowest numbered transfer (according to fromStopId)
-                int j=0;
+                int j = 0;
                 boolean skipRestOfNodes = false;
 
                 //System.out.println("nodes.length = "+nodes.length);
@@ -178,7 +175,9 @@ public class Graph {
 
                     //if (i%2000==0) System.out.println(i);
                     //if all transfers have been checked there is nothing left to compare
-                    if (skipRestOfNodes) break;
+                    if (skipRestOfNodes) {
+                        break;
+                    }
 
                     boolean allTransfersFound = false;
 
@@ -196,34 +195,34 @@ public class Graph {
 
                         else if (transfers.get(j).fromStopId == node.label) {
                             if (transfers.get(j).toStopId != previousToStopId) {
-                                /*System.out.println(
-                                        "transfers.get(" + j + ").fromStopId = " + transfers.get(j).fromStopId
-                                       +", transfers.get(" + j + ").toStopId = " + transfers.get(j).toStopId
-                                       +", transfers.get(" + j + ").transferType = " + transfers.get(j).transferType
-                                       +", nodes[" + i + "].label = " + nodes[i].label
-                                       +", previousToStopId = " + previousToStopId);*/
-
                                 /* calculate weight of edge (if transferType is 0, then cost is 2,
                                    if transferType is 2 then cost is minTransferTime/100 */
                                 float weight = 0.0f;
 
                                 //cost is 2 if transfer type is 0 (immediate transfer possible, from transfers.txt)
-                                if (transfers.get(j).transferType == 0) weight = 2.0f;
+                                if (transfers.get(j).transferType == 0) {
+                                    weight = 2.0f;
+                                }
                                 //cost is 1 if transfer type is 1 (from stop_times.txt)
-                                else if (transfers.get(j).transferType == 1) weight = 1.0f;
+                                else if (transfers.get(j).transferType == 1) {
+                                    weight = 1.0f;
+                                }
                                 //cost is minimum transfer time/100 if transfer type is 2 (from transfers.txt)
-                                else if (transfers.get(j).transferType == 2) weight = ((float) transfers.get(j).minTransferTime / 100);
-                                else System.out.println("invalid transfer type" + transfers.get(j).transferType);
+                                else if (transfers.get(j).transferType == 2) {
+                                    weight = ((float) transfers.get(j).minTransferTime / 100);
+                                } else {
+                                    System.out.println("invalid transfer type" + transfers.get(j).transferType);
+                                }
 
                                 //need to loop through nodes to get node corresponding to toStopId
 
                                 int toStopId = 0;
                                 for (int k = 0; k < nodes.length; k++) {
-                                    if (nodes[k].label == transfers.get(j).toStopId) toStopId = k;
+                                    if (nodes[k].label == transfers.get(j).toStopId) {
+                                        toStopId = k;
+                                    }
                                 }
 
-                                //print out toStopIds
-                                //System.out.println("toStopId = " + toStopId);
 
                                 //add edge to nodes and edges
                                 Edge e = new Edge(node, nodes[toStopId], weight);
@@ -250,7 +249,6 @@ public class Graph {
                     }
                 }
             } catch (Exception e) {
-                //System.err.format("Exception occurred trying to read '%s'.", filename);
                 e.printStackTrace();
             }
         }
@@ -259,24 +257,29 @@ public class Graph {
     public int getNodeIndexFromLabel(int label) {
         int index = 0;
         boolean indexFound = false;
-        while (!indexFound&&(index<this.nodes.length)) {
-            if (this.nodes[index].label==label) indexFound = true;
-            else index++;
+        while (!indexFound && (index < this.nodes.length)) {
+            if (this.nodes[index].label == label) {
+                indexFound = true;
+            } else {
+                index++;
+            }
         }
 
-        if (index==this.nodes.length) return -1;
-        else return index;
+        if (index == this.nodes.length) {
+            return -1;
+        } else {
+            return index;
+        }
     }
 
     /**
      * Output the information for a provided trip
      *
-     * @Authors: Lydia MacBride, David King
      * @param arrivalTime:
+     * @Authors: Lydia MacBride, David King
      */
 
     //TODO return more information about each trip as per the project specification
-
     public void getTripsFromArrivalTime(String arrivalTime) {
         // Check for invalid arrival time
         Scanner scanner = new Scanner(arrivalTime).useDelimiter(":");
@@ -294,15 +297,15 @@ public class Graph {
         for (Transfer transfer : transfers) {
             if (transfer.arrivalTime.equals(arrivalTime)) {
                 System.out.println("Trip " + transfer.tripId +
-                                   ", From " + transfer.fromStopId +
-                                   ", To " + transfer.toStopId +
-                                   ", Type " + transfer.transferType);
+                        ", From " + transfer.fromStopId +
+                        ", To " + transfer.toStopId +
+                        ", Type " + transfer.transferType);
                 transfersFound++;
             }
         }
 
         if (transfersFound >= 1) {
-            System.out.println(transfersFound + ((transfersFound == 1) ? " transfer" : " transfers" ) + " found.");
+            System.out.println(transfersFound + ((transfersFound == 1) ? " transfer" : " transfers") + " found.");
         } else {
             System.out.println("No transfers fitting search parameters found.");
         }
@@ -311,22 +314,21 @@ public class Graph {
     /**
      * Allow more useful searching of stop names by moving certain words to the end
      *
-     * @Authors: David King
      * @param input:
+     * @Authors: David King
      */
 
-    public String parseStopName(String input)
-    {
+    public String parseStopName(String input) {
         String output = input;
-        if (output.substring(0,8).equals("FLAGSTOP")) {
-            output = output.substring(9) + " " + output.substring(0,8);
+        if (output.substring(0, 8).equals("FLAGSTOP")) {
+            output = output.substring(9) + " " + output.substring(0, 8);
         }
 
-        if (output.substring(0,2).equals("WB")||
-                output.substring(0,2).equals("NB")||
-                output.substring(0,2).equals("SB")||
-                output.substring(0,2).equals("EB")) {
-            output = output.substring(3) + " " + output.substring(0,2);
+        if (output.substring(0, 2).equals("WB") ||
+                output.substring(0, 2).equals("NB") ||
+                output.substring(0, 2).equals("SB") ||
+                output.substring(0, 2).equals("EB")) {
+            output = output.substring(3) + " " + output.substring(0, 2);
         }
 
         return output;
@@ -365,6 +367,7 @@ class Node {
 
     //used to allow stop id to stop name conversion
     String name;
+
     /**
      * @param label: Integer label of the Node
      */
@@ -386,7 +389,7 @@ class Node {
     Node[] getNeighbours() {
         Node[] output = new Node[edges.size()];
 
-        for (int i = 0; i < edges.size(); i++){
+        for (int i = 0; i < edges.size(); i++) {
             output[i] = edges.get(i).dst;
         }
 
@@ -422,8 +425,8 @@ class Edge {
     double weight;
 
     /**
-     * @param src: Source Node
-     * @param dst: Destination Node
+     * @param src:    Source Node
+     * @param dst:    Destination Node
      * @param weight: Weight of the Edge
      */
     Edge(Node src, Node dst, double weight) {
@@ -432,8 +435,7 @@ class Edge {
         this.weight = weight;
     }
 
-    public String toString()
-    {
+    public String toString() {
         return "(" + this.src.label + "," + this.dst.label + "," + this.weight + ")";
     }
 }

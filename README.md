@@ -5,10 +5,10 @@ Team project for Algorithms and Data Structures 2
 
 ## Team Members & Contributions
 * Lydia MacBride
-  * ASD2GroupProject.java, Graph.java
+  * ASD2GroupProject.java, PathDijkstra.java, Graph.java
 * David King 
-  * ASD2GroupProject.java, Transfer.java, Graph.java
+  * ASD2GroupProject.java, PathDijkstra.java, Transfer.java, Graph.java
 * Liam O Lionaird 
-  * ASD2GroupProject.java, 
+  * ASD2GroupProject.java
 * Sarah Klein
   * ASD2GroupProject.java, PathDijkstra.java

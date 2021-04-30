@@ -10,7 +10,7 @@ public class Transfer {
     int fromStopId, toStopId, transferType, minTransferTime, tripId;
     String arrivalTime;
 
-    Transfer (int from, int to, int type, int time, int id, String arrTime) {
+    Transfer(int from, int to, int type, int time, int id, String arrTime) {
         fromStopId = from;
         toStopId = to;
         transferType = type;
@@ -25,9 +25,13 @@ public class Transfer {
     }
 
     // Compares toStopId for 2 Transfers, used to sort transfers ArrayList so they can be added to the graph quicker
-    public int compareTo(Transfer o) { return this.toStopId - o.toStopId; }
+    public int compareTo(Transfer o) {
+        return this.toStopId - o.toStopId;
+    }
 
-    public int compareId(Transfer o) { return this.tripId - o.tripId; }
+    public int compareId(Transfer o) {
+        return this.tripId - o.tripId;
+    }
 
     public String toString() {
         return "(" + this.fromStopId + "," + this.toStopId + "," + this.transferType + "," + this.minTransferTime + ")";
