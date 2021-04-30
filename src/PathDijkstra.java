@@ -163,8 +163,6 @@ public class PathDijkstra {
 	   		}
 	   	}
 	}
-    
-    //TODO make this return the correct shortest path
 
     public ArrayList<Edge> getShortestPath(){
     	//System.out.println("start label = "+startLabel);

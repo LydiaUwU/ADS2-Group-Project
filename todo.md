@@ -2,15 +2,15 @@
 ## Functionality
 ### Part 1 (shortest path between stops):
 #### Basic functionality (10%):
-*Algorithm works partially but gives errors on some simple paths (look at PathDijkstra.java and Graph.java). See the console input before the main menu for debug info.*
+Works correctly.
 #### Edge cases (10%):
-Work on basic functionality before doing this.
+*Test edge cases.*
 
 ### Part 2 (search for stops by name):
 #### Basic functionality (10%):
 Works correctly.
 #### Edge cases (10%):
-*Most edge cases covered. Test interesting inputs to try to break it.*
+*Test edge cases.*
 
 
 ### Part 3 (searching for trips with a given arrival time):
@@ -21,7 +21,7 @@ Work on basic functionality before doing this.
 
 
 ## Interface (10%)
-*The interface works for selecting parts 2 and 3, but part 1 just prints "Put shortest path here" currently. Part 1 of the interface should let the user input 2 stop IDs (not names as far as I can tell, plus it's easier), which just involves getting user input and then creating a PathDijkstra object: PathDijkstra stopsPath = new PathDijkstra(stopsGraph, firstStop, secondStop). This can be done even if  part 1 doesn't actually work right yet.*
+Works correctly for all 3 parts.
 
 ## Demo (10%)
 Work on parts 1-3 before doing this.

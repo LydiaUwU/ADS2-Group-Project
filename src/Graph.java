@@ -274,6 +274,9 @@ public class Graph {
      * @Authors: Lydia MacBride, David King
      * @param arrivalTime:
      */
+
+    //TODO return more information about each trip as per the project specification
+
     public void getTripsFromArrivalTime(String arrivalTime) {
         // Check for invalid arrival time
         Scanner scanner = new Scanner(arrivalTime).useDelimiter(":");
