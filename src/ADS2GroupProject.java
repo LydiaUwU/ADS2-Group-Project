@@ -21,10 +21,10 @@ public class ADS2GroupProject {
         boolean outerLoop = true;
 
         while (outerLoop) {
-            System.out.println("Enter the number of your choice (or type \"quit\" to quit) and then press ENTER: :\n" + "1: Shortest path between 2 bus stops\n" + "2: Search for bus stops by name\n" + "3: Search for trips with a given arrival time");
+            System.out.println("Enter the number of your choice (or type \"quit\" to quit) and then press ENTER:\n" + "1: Shortest path between 2 bus stops\n" + "2: Search for bus stops by name\n" + "3: Search for trips with a given arrival time");
             Scanner inputScanner = new Scanner(System.in);
 
-            String input = inputScanner.next();
+            String input = inputScanner.nextLine();
 
             switch (input) {
                 case "quit":
