@@ -22,7 +22,7 @@ public class Graph {
      * @param filenames: Filename of .txt file to use to generate the graph.
      */
 
-    // stops.txt, stop_times.txt, transfers.txt# (is this overkill? can the filenames just be given to the scanners directly?)
+    // stops.txt, stop_times.txt, transfers.txt
     Graph(String[] filenames) {
         if (filenames != null) {
             edges = new ArrayList<>();

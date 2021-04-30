@@ -60,7 +60,7 @@ public class PathDijkstra {
                 double currentMinDistance = Double.POSITIVE_INFINITY;
                 int minVertex = 0;
 
-                for (currentVertexIndex = 0; currentVertexIndex < inputGraph.nodes.length; currentVertexIndex++) {
+                for (currentVertexIndex = 0; currentVertex  Index < inputGraph.nodes.length; currentVertexIndex++) {
                     if ((distTo.get(currentVertexIndex) < currentMinDistance) && !markedVertices.get(currentVertexIndex)) {
                         minVertex = currentVertexIndex;
                         currentMinDistance = distTo.get(currentVertexIndex);
@@ -89,7 +89,7 @@ public class PathDijkstra {
 
     private void relax(Graph G, int v) {
         for (int i = 0; i < G.nodes[v].edges.size(); i++) {
-            if (true) { //G.nodes[v].edges.get(i) != null
+            if (true) {
                 Edge e = G.nodes[v].edges.get(i);
                 int w = graphIn.getNodeIndexFromLabel(e.dst.label);
 
